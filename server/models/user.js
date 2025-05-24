@@ -8,7 +8,7 @@ const userSchema = new mongoose.Schema({
     profile: { type: String },
     categoryId: [ 
         {
-            type: mongoose.Schema.ObjectId,
+            type: mongoose.Schema.Types.ObjectId,
             ref: "Category",
         }
     ]

@@ -10,9 +10,7 @@ exports.signup = async (req, res) => {
     if (!username || !name || !email || !password) {
       return res.status(400).json({ message: "All fields are required" });
     }
-
     
-
     const existingUsername = await User.findOne({ username });
     const existingEmail = await User.findOne({ email });
 

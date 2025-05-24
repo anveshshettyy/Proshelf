@@ -2,7 +2,9 @@ const { connectDB } = require('./lib/db');
 const path = require('path');
 const express = require('express');
 const cors = require('cors');
-const authRoutes = require('./routes/auth.routes');
+const authRoutes = require('./routes/auth.route');
+const categoryRoutes = require('./routes/category.route');
+const projectRoutes = require('./routes/projects.route')
 const cookieParser = require('cookie-parser');
 const fileUpload = require('express-fileupload');
 
@@ -27,6 +29,8 @@ app.get('/api', (req, res) => {
 
 
 app.use('/api/auth', authRoutes);
+app.use('/api/category', categoryRoutes);
+app.use('/api/project', projectRoutes );
 
 
 
