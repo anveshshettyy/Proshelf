@@ -4,8 +4,8 @@
   "main": "index.js",
   "scripts": {
     "start": "concurrently \"npm run server\" \"npm run client\"",
-    "client": "npm --prefix client start",
     "server": "npm --prefix server run dev",
+    "client": "npm --prefix client run dev",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -20,8 +20,11 @@
     "express-fileupload": "^1.5.1",
     "express-session": "^1.18.1",
     "jsonwebtoken": "^9.0.2",
+    "locomotive-scroll": "^4.1.4",
+    "lucide-react": "^0.511.0",
     "passport": "^0.7.0",
     "passport-google-oauth20": "^2.0.0",
-    "react-router-dom": "^7.6.1"
+    "react-router-dom": "^7.6.1",
+    "uuid": "^8.3.2"
   }
 }

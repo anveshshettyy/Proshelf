@@ -13,16 +13,19 @@ router.get('/google', passport.authenticate('google', {
 router.get('/google/callback',
   passport.authenticate('google', { session: false, failureRedirect: '/login' }),
   (req, res) => {
-    const token = jwt.sign({ id: req.user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
+    const token = jwt.sign({ id: req.user._id }, process.env.JWT_SECRET, {
+      expiresIn: '7d',
+    });
 
     res.cookie('token', token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
     });
 
-    res.redirect('http://localhost:3000/profile');
+    res.redirect('http://localhost:5173/profile');
   }
 );
+
 
 router.get('/api/me', protectRoute, async (req, res) => {
   const user = await User.findById(req.user._id).select("-password"); 

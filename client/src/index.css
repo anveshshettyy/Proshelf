@@ -1,13 +1,45 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+@import "tailwindcss";
+
+@font-face {
+    font-family: 'helvetica';
+    font-display: swap;
+    src: url('./assets/Fonts/Helvetica.ttf');
+    font-style: normal;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+@font-face {
+    font-family: 'helvetica-bold';
+    font-display: swap;
+    src: url('./assets/Fonts/Helveitca-Bold.ttf');
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'helvetica-semi-bold';
+    font-display: swap;
+    src: url('./assets/Fonts/Helvetica-semibold.otf');
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'head';
+    font-display: swap;
+    src: url('./assets/Fonts/ppn.ttf');
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'med';
+    font-display: swap;
+    src: url('./assets/Fonts/med.ttf');
+    font-style: normal;
+}
+
+
+@theme {
+    --font-helvetica: "helvetica", sans-serif;
+    --font-helvetica-bold: "helvetica-bold", sans-serif;
+    --font-helvetica-semi-bold: "helvetica-semi-bold", sans-serif;
+    --font-head: "head", sans-serif;
+    --font-med: "med", sans-serif;
 }
