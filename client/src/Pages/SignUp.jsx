@@ -22,10 +22,8 @@ export default function SignUp() {
         e.preventDefault();
         setError('');
         try {
-            // Replace with your signup API endpoint
             const response = await axios.post('/api/signup', formData);
             console.log('Signup success:', response.data);
-            // Redirect or show success message here
         } catch (err) {
             if (err.response && err.response.data && err.response.data.error) {
                 setError(err.response.data.error);
