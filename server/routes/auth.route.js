@@ -17,17 +17,17 @@ router.get('/google/callback',
       expiresIn: '7d',
     });
 
-    res.cookie('token', token, {
+    res.cookie('jwt', token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
     });
 
-    res.redirect('http://localhost:5173/profile');
+    res.redirect('http://localhost:5173/');
   }
 );
 
 
-router.get('/api/me', protectRoute, async (req, res) => {
+router.get('/me', protectRoute, async (req, res) => {
   const user = await User.findById(req.user._id).select("-password"); 
   res.json({ user });
 });

@@ -1,10 +1,15 @@
-import React, { useState } from 'react'
-import axios from '../lib/axios'
-import Navbar from '../Components/Navbar'
+import React, { useState } from 'react';
+import axios from '../lib/axios';
+import Navbar from '../Components/Navbar';
 import backgroundImage from '../assets/Images/beautiful-gray-color-gradient-background.avif';
 import GoogleLogo from '../assets/Images/google_Icon.webp';
+import { useNavigate } from 'react-router-dom';
+import CustomAlert from '../Components/CustomAlert';
+
 
 export default function SignUp() {
+    const navigate = useNavigate();
+
     const [formData, setFormData] = useState({
         username: '',
         name: '',
@@ -12,48 +17,62 @@ export default function SignUp() {
         password: '',
     });
 
-    const [error, setError] = useState('');
+    const [alert, setAlert] = useState({ message: '', type: '' });
+
+    const showAlert = (message, type = 'error') => {
+        setAlert({ message, type });
+        setTimeout(() => setAlert({ message: '', type: '' }), 3000);
+    };
 
     const handleChange = e => {
         setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
     };
 
     const handleSubmit = async e => {
-        e.preventDefault();
-        setError('');
-        try {
-            const response = await axios.post('/api/signup', formData);
-            console.log('Signup success:', response.data);
-        } catch (err) {
-            if (err.response && err.response.data && err.response.data.error) {
-                setError(err.response.data.error);
-            } else {
-                setError('An error occurred, please try again.');
-            }
+    e.preventDefault();
+
+    if (formData.password.length < 6) {
+        showAlert('Password must be at least 6 characters');
+        return;
+    }
+
+    try {
+        const response = await axios.post('/auth/signup', formData);
+        console.log('Signup success:', response.data);
+        showAlert('Signup successful!', 'success');
+        setTimeout(() => navigate('/collections'), 1500);
+    } catch (err) {
+        console.error('Signup error (frontend):', err); 
+        if (err.response?.data?.message) {
+            showAlert(err.response.data.message);
+        } else {
+            showAlert('An unexpected error occurred.');
         }
-    };
+    }
+};
+
 
     const handleGoogleSignup = () => {
-        window.location.href = 'http://localhost:5000/api/auth/google'; 
+        window.location.href = 'http://localhost:5000/api/auth/google';
     };
-
 
     return (
         <div>
             <Navbar />
 
-            <div className='lg:px-20 px-5 py-10 h-screen'>
-                <h1 className='font-head text-6xl lg:text-[12vh]'>Lets's Grow Together</h1>
+            <div className='lg:px-20 px-5 py-10 h-screen overflow-hidden mb-16'>
+                <h1 className='font-head text-6xl lg:text-[12vh]'>Unlock your stack!</h1>
 
                 <div className='flex gap-x-3 h-screen mt-10'>
-                    <div className='hidden lg:block h-[65%] w-1/2 bg-slate-300 rounded-2xl bg-cover bg-center bg-no-repeat' style={{ backgroundImage: `url(${backgroundImage})` }}></div>
+                    <div
+                        className='hidden lg:block h-[65%] w-1/2 bg-slate-300 rounded-2xl bg-cover bg-center bg-no-repeat'
+                        style={{ backgroundImage: `url(${backgroundImage})` }}
+                    ></div>
 
-                    <div className='h-[65%] w-full lg:w-1/2  rounded-3xl  '>
+                    <div className='h-[65%] w-full lg:w-1/2 rounded-3xl'>
                         <div className='lg:p-5'>
                             <form onSubmit={handleSubmit}>
-                                {error && <p style={{ color: 'red' }}>{error}</p>}
-
-                                <div className='font-helvetica text-4xl '>
+                                <div className='font-helvetica text-2xl md:text-4xl'>
                                     <input
                                         name="username"
                                         type="text"
@@ -61,13 +80,12 @@ export default function SignUp() {
                                         value={formData.username}
                                         onChange={handleChange}
                                         required
-                                        className='outline-none'
+                                        className='outline-none w-full'
                                     />
                                 </div>
-                                
                                 <hr />
 
-                                <div className='font-helvetica text-4xl mt-5 '>
+                                <div className='font-helvetica text-2xl md:text-4xl mt-5'>
                                     <input
                                         name="name"
                                         type="text"
@@ -75,13 +93,12 @@ export default function SignUp() {
                                         value={formData.name}
                                         onChange={handleChange}
                                         required
-                                        className='outline-none'
+                                        className='outline-none w-full'
                                     />
                                 </div>
-
                                 <hr />
 
-                                <div className='font-helvetica text-4xl mt-5 '>
+                                <div className='font-helvetica text-2xl md:text-4xl mt-5'>
                                     <input
                                         name="email"
                                         type="email"
@@ -89,13 +106,12 @@ export default function SignUp() {
                                         value={formData.email}
                                         onChange={handleChange}
                                         required
-                                        className='outline-none'
+                                        className='outline-none w-full'
                                     />
                                 </div>
-
                                 <hr />
 
-                                <div className='font-helvetica text-4xl mt-5 '>
+                                <div className='font-helvetica text-2xl md:text-4xl mt-5'>
                                     <input
                                         name="password"
                                         type="password"
@@ -103,25 +119,40 @@ export default function SignUp() {
                                         value={formData.password}
                                         onChange={handleChange}
                                         required
-                                        className='outline-none'
+                                        className='outline-none w-full'
                                     />
                                 </div>
-
                                 <hr />
 
-                                <button className='cursor-pointer my-7 py-3 bg-black w-full text-white rounded-md font-med text-3xl' type="submit">Sign Up</button>
+                                <button
+                                    type="submit"
+                                    className='cursor-pointer my-7 py-3 bg-black w-full text-white rounded-md font-med text-2xl md:text-3xl'
+                                >
+                                    Sign Up
+                                </button>
                             </form>
 
                             <hr />
 
-                            <button className='cursor-pointer flex justify-center items-center gap-x-5 my-7 py-2 bg-white w-full text-black border border-black rounded-md font-med text-3xl' onClick={handleGoogleSignup}>
-                                <img className='h-10 w-10 object-contain' src={GoogleLogo} alt="" />
+                            <button
+                                onClick={handleGoogleSignup}
+                                className='cursor-pointer flex justify-center items-center gap-x-5 my-7 py-2 bg-white w-full text-black border border-black rounded-md font-med text-2xl md:text-3xl'
+                            >
+                                <img className='h-10 w-10 object-contain' src={GoogleLogo} alt="Google" />
                                 Continue with Google
                             </button>
                         </div>
                     </div>
                 </div>
             </div>
+
+            {alert.message && (
+                <CustomAlert
+                    message={alert.message}
+                    type={alert.type}
+                    onClose={() => setAlert({ message: '', type: '' })}
+                />
+            )}
         </div>
-    )
+    );
 }

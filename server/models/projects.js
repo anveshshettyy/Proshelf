@@ -6,6 +6,8 @@ const projectsSchema  = new mongoose.Schema ({
     images: [{ type: String }],
     video: { type: String },
     source: { type: String },
+    liveDemo: { type: String },
+    technologies: [{ type: String }],
     categoryId: 
         {
             type: mongoose.Schema.Types.ObjectId,

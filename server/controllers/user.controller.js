@@ -60,6 +60,7 @@ exports.signup = async (req, res) => {
       name: newUser.name,
       email: newUser.email,
       profile: newUser.profile,
+      
     });
   } catch (error) {
     console.error("Signup error:", error);
@@ -77,10 +78,23 @@ exports.login = async (req, res) => {
   try {
     const user = await User.findOne({
       $or: [{ email: identifier }, { username: identifier }],
-    });
+    }).select('+password googleId'); 
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
+    }
+
+    if (user.googleId && !user.password) {
+      return res.status(400).json({
+        message:
+          "This account uses Google sign-in. Please login with Google instead.",
+      });
+    }
+
+    if (!user.password) {
+      return res.status(400).json({
+        message: "Password not set for this user. Please reset your password.",
+      });
     }
 
     const isMatch = await bcrypt.compare(password, user.password);

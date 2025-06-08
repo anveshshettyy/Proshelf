@@ -10,8 +10,8 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     async function fetchUser() {
       try {
-        const res = await axios.get('/api/me', { withCredentials: true });
-        setUser(res.data.user); // depends on your backend response structure
+        const res = await axios.get('/api/auth/me', { withCredentials: true });
+        setUser(res.data.user);
       } catch (error) {
         setUser(null);
       }
@@ -21,13 +21,14 @@ export const AuthProvider = ({ children }) => {
     fetchUser();
   }, []);
 
-  const login = (userData) => {
-    // you might call your backend login API here
-    setUser(userData);
+  const login = async (credentials) => {
+    await axios.post('/api/login', credentials, { withCredentials: true });
+    const res = await axios.get('/api/auth/me', { withCredentials: true });
+    setUser(res.data.user);
   };
 
   const logout = async () => {
-    await axios.post('/api/logout', {}, { withCredentials: true });
+    await axios.post('/api/auth/logout', {}, { withCredentials: true });
     setUser(null);
   };
 
@@ -37,5 +38,6 @@ export const AuthProvider = ({ children }) => {
     </AuthContext.Provider>
   );
 };
+
 
 export const useAuth = () => useContext(AuthContext);

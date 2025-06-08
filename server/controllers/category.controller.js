@@ -30,6 +30,16 @@ exports.createCategory = async(req, res) => {
     }
 };
 
+exports.category = async (req, res) => {
+  try {
+    const categories = await Category.find({ userId: req.user._id }); 
+    res.status(200).json(categories);
+  } catch (error) {
+    console.error('Failed to fetch categories:', error);
+    res.status(500).json({ message: 'Server Error' });
+  }
+}
+
 exports.renameCategory = async( req, res ) => {
     const categoryId = req.params.categoryId;
     const { title, description } = req.body;

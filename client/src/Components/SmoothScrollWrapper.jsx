@@ -1,23 +1,27 @@
-// components/SmoothScrollWrapper.jsx
-import React, { useRef, useEffect } from 'react';
-import LocomotiveScroll from 'locomotive-scroll';
-import 'locomotive-scroll/dist/locomotive-scroll.css';
+import React, { useEffect, useRef } from 'react';
+import Lenis from '@studio-freight/lenis';
 
 export default function SmoothScrollWrapper({ children }) {
-  const scrollRef = useRef(null);
+  const lenisRef = useRef(null);
 
   useEffect(() => {
-    const scroll = new LocomotiveScroll({
-      el: scrollRef.current,
+    lenisRef.current = new Lenis({
+      duration: 1.2,
       smooth: true,
-      lerp: 0.075,
     });
 
-    return () => scroll.destroy();
+    function raf(time) {
+      lenisRef.current.raf(time);
+      requestAnimationFrame(raf);
+    }
+
+    requestAnimationFrame(raf);
+
+    return () => lenisRef.current.destroy();
   }, []);
 
   return (
-    <div ref={scrollRef} data-scroll-container>
+    <div data-scroll-container>
       {children}
     </div>
   );

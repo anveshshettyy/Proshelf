@@ -9,6 +9,7 @@ const userSchema = new mongoose.Schema({
     required: function () {
       return !this.googleId;
     },
+    select: false,
   },
   profile: { type: String },
   categoryId: [
