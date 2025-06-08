@@ -16,7 +16,6 @@ exports.createProject = async (req, res) => {
 
     const uploadImageUrls = [];
 
-    // Upload Images
     if (req.files?.images) {
       const imageFiles = Array.isArray(req.files.images)
         ? req.files.images
@@ -34,7 +33,6 @@ exports.createProject = async (req, res) => {
       );
     }
 
-    // Upload Video
     let uploadedVideo = "";
     if (req.files?.video) {
       const videoFile = req.files.video;
@@ -48,14 +46,13 @@ exports.createProject = async (req, res) => {
       uploadedVideo = uploadResponse.secure_url;
     }
 
-    // Create Project
     const newProject = new Projects({
       title,
       description,
       images: uploadImageUrls,
       video: uploadedVideo,
       source,
-      liveDemo, // 🔥 NEW
+      liveDemo, 
       technologies: Array.isArray(technologies)
         ? technologies.map((t) => t.trim())
         : typeof technologies === "string"
@@ -67,7 +64,6 @@ exports.createProject = async (req, res) => {
 
     const savedProject = await newProject.save();
 
-    // Link project to category
     await Category.findByIdAndUpdate(categoryId, {
       $push: { projectsId: savedProject._id },
     });
