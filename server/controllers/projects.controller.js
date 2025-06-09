@@ -80,7 +80,7 @@ exports.createProject = async (req, res) => {
 
 exports.updateProject = async (req, res) => {
   try {
-    const projectId = req.params.projectId;
+    const projectId = req.params.id;
     const { title, description, source, liveDemo, technologies } = req.body;
 
     const updateData = {};
@@ -138,13 +138,33 @@ exports.updateProject = async (req, res) => {
   }
 };
 
+exports.getSingleProject = async (req, res) => {
+  try {
+    const projectId = req.params.id;
+    
+    
+
+    const project = await Projects.findById(projectId).populate('categoryId'); // optional populate
+
+    if (!project) {
+      return res.status(404).json({ message: "Project not found" });
+    }
+    
+
+    res.status(200).json({ project });
+  } catch (error) {
+    console.error("Error fetching single project:", error.message);
+    res.status(500).json({ message: "Internal Server Error", error });
+  }
+};
+
 exports.getCategoryWithProjects = async (req, res) => {
   try {
     const category = await Category.findById(req.params.id);
     if (!category)
       return res.status(404).json({ message: "Category not found" });
 
-    const projects = await Projects.find({ categoryId: req.params.id });
+    const projects = await Projects.find({ categoryId: req.params.id }).select('title description');
 
     res.status(200).json({ category, projects });
   } catch (error) {

@@ -187,8 +187,7 @@ export default function Collections() {
                     </div>
                   ) : (
                     <div
-                      onClick={() => navigate(`/projects/${collection._id}`)}
-                      className='group p-3 md:px-10 md:py-5 bg-slate-200 rounded-2xl flex items-center gap-x-5 cursor-pointer'>
+                      className='group p-3 md:px-10 md:py-5 bg-slate-200 rounded-2xl flex items-center gap-x-5 '>
                       <div className='relative h-10 w-10'>
                         <img
                           className='absolute inset-0 h-full w-full object-contain opacity-100 transition duration-200'
@@ -198,7 +197,9 @@ export default function Collections() {
                       </div>
 
                       <div className='flex flex-col md:flex-row w-full md:items-center items-start justify-between'>
-                        <div className='mb-2 md:mb-0'>
+                        <div
+                          onClick={() => navigate(`/projects/${collection._id}`)}
+                          className='mb-2 md:mb-0 cursor-pointer'>
                           <h1 className='font-head'>{collection.title}</h1>
                           <h1 className='font-med font-thin text-sm'>
                             {collection.description}

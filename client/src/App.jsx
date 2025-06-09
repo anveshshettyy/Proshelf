@@ -7,7 +7,8 @@ import Home from './Pages/Home'
 import SmoothScrollWrapper from './Components/SmoothScrollWrapper'
 import SignUp from './Pages/SignUp'
 import Profile from './Pages/Profile'
-import Projects from './Pages/Projects'
+import Project from './Pages/Project'
+import ProjectList from './Pages/ProjectList'
 
 
 export default function App() {
@@ -19,7 +20,8 @@ export default function App() {
         <Route path='/signup' element={<SignUp />} />
         <Route path='/profile' element={<Profile />} />
         <Route path='/collections' element={<ProtectedRoute><Collections /></ProtectedRoute>} />
-        <Route path='/projects/:id' element={<ProtectedRoute> <Projects /> </ProtectedRoute>} />
+        <Route path='/projects/:id' element={<ProtectedRoute> <ProjectList /></ProtectedRoute>} />
+        <Route path='/project/:id' element={<ProtectedRoute> <Project /></ProtectedRoute>} />
       </Routes>
     </SmoothScrollWrapper>
   )

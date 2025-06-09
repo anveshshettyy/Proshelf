@@ -38,7 +38,7 @@ export default function SignUp() {
 
     try {
         const response = await axios.post('/auth/signup', formData);
-        console.log('Signup success:', response.data);
+        ('Signup success:', response.data);
         showAlert('Signup successful!', 'success');
         setTimeout(() => navigate('/collections'), 1500);
     } catch (err) {

@@ -1,4 +1,5 @@
-import React from 'react';
+import React from "react";
+import Masonry, { ResponsiveMasonry } from "react-responsive-masonry";
 import Lightbox from "yet-another-react-lightbox";
 import "yet-another-react-lightbox/styles.css";
 
@@ -12,30 +13,39 @@ export default function ProjectGallery({ slides }) {
   };
 
   return (
-    <div>
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-6">
-        {slides.map((slide, i) => (
-          slide.type === "video" ? (
-            <video
-              key={i}
-              src={slide.src}
-              className="w-full h-40 object-cover rounded cursor-pointer"
-              onClick={() => handleClick(i)}
-              muted
-              playsInline
-              loop
-            />
-          ) : (
-            <img
-              key={i}
-              src={slide.src}
-              alt={`Slide ${i + 1}`}
-              className="w-full h-40 object-cover rounded cursor-pointer"
-              onClick={() => handleClick(i)}
-            />
-          )
-        ))}
-      </div>
+    <div className="mb-6">
+      <ResponsiveMasonry
+        columnsCountBreakPoints={{
+          0: 1,   
+          640: 2,   
+          1024: 3,  
+        }}
+      >
+        <Masonry gutter="1rem">
+          {slides.map((slide, i) =>
+            slide.type === "video" ? (
+              <video
+                key={i}
+                src={slide.src}
+                className="w-full rounded-lg cursor-pointer object-cover"
+                onClick={() => handleClick(i)}
+                muted
+                playsInline
+                loop
+              />
+            ) : (
+              <img
+                key={i}
+                src={slide.src}
+                alt={`Slide ${i + 1}`}
+                className="w-full rounded-lg cursor-pointer"
+                onClick={() => handleClick(i)}
+                loading="lazy"
+              />
+            )
+          )}
+        </Masonry>
+      </ResponsiveMasonry>
 
       <Lightbox
         open={open}
