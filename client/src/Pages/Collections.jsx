@@ -11,6 +11,7 @@ import DeleteIcon from '../assets/Images/delete.png';
 import DeleteIconB from '../assets/Images/deleteB.png';
 import FolderIcon from '../assets/Images/folder.png';
 import EditIcon from '../assets/Images/edit.png';
+import { Folder } from 'lucide-react';
 
 export default function Collections() {
   const navigate = useNavigate();
@@ -70,8 +71,6 @@ export default function Collections() {
         { withCredentials: true }
       );
 
-      // Use res.data.category if your backend returns the updated category under 'category'
-      // Or use res.data directly if backend returns updated object directly
       const updatedCategory = res.data.category || res.data;
 
       setCollections((prev) =>
@@ -195,7 +194,7 @@ export default function Collections() {
                           alt='Folder'
                         />
                       </div>
-
+ 
                       <div className='flex flex-col md:flex-row w-full md:items-center items-start justify-between'>
                         <div
                           onClick={() => navigate(`/projects/${collection._id}`)}

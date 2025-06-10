@@ -9,12 +9,17 @@ import CreateIcon from '../assets/Images/add.png';
 import CreateIconB from '../assets/Images/addB.png';
 import DeleteIcon from '../assets/Images/delete.png';
 import DeleteIconB from '../assets/Images/deleteB.png';
-import FolderIcon from '../assets/Images/folder.png';
+import ProjectIcon from '../assets/Images/project.png';
 import EditIcon from '../assets/Images/edit.png';
+import CustomAlert from '../Components/CustomAlert';
+
 
 export default function ProjectList() {
     const { id } = useParams();
     const navigate = useNavigate();
+
+    const [isUploading, setIsUploading] = useState(false);
+    const [alert, setAlert] = useState({ show: false, message: '', type: 'success' });
 
     const [projects, setProjects] = useState([]);
     const [category, setCategory] = useState(null);
@@ -25,6 +30,21 @@ export default function ProjectList() {
     const [editingProject, setEditingProject] = useState(null);
     const [editTitle, setEditTitle] = useState('');
     const [editDescription, setEditDescription] = useState('');
+    const [title, setTitle] = useState('');
+    const [description, setDescription] = useState('');
+    const [source, setSource] = useState('');
+    const [liveDemo, setLiveDemo] = useState('');
+    const [technologies, setTechnologies] = useState('');
+    const [images, setImages] = useState(null); // For multiple images
+    const [video, setVideo] = useState(null);   // For video
+
+    const handleImageUpload = (e) => {
+        setImages(e.target.files);
+    };
+
+    const handleVideoUpload = (e) => {
+        setVideo(e.target.files[0]);
+    };
 
     useEffect(() => {
         if (!id) return;
@@ -41,23 +61,65 @@ export default function ProjectList() {
     }, [id]);
 
     const handleCreate = async () => {
+        setIsUploading(true); // Show loader
+        setShowCreateDrawer(false); // Hide form
+
         try {
+            const formData = new FormData();
+            formData.append('title', createTitle);
+            formData.append('description', createDescription);
+            formData.append('source', source);
+            formData.append('liveDemo', liveDemo);
+            formData.append('technologies', technologies);
+
+            // Append images (if any)
+            if (images && images.length > 0) {
+                for (let i = 0; i < images.length; i++) {
+                    formData.append('images', images[i]);
+                }
+            }
+            // Append video (if any)
+            if (video) {
+                formData.append('video', video);
+            }
+
             const res = await axios.post(
                 `/api/projects/create/${category._id}`,
+                formData,
                 {
-                    title: createTitle,
-                    description: createDescription
-                },
-                { withCredentials: true }
+                    withCredentials: true,
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                }
             );
-            setProjects((prev) => [...prev, res.data.project]); // ✅ access `project` from response
-            setShowCreateDrawer(false);
+            setProjects((prev) => [...prev, res.data.project]);
             setCreateTitle('');
             setCreateDescription('');
+            setSource('');
+            setLiveDemo('');
+            setTechnologies('');
+            setImages(null);
+            setVideo(null);
+
+            setAlert({
+                show: true,
+                message: "Successfully created your project.",
+                type: "success"
+            });
         } catch (error) {
+            setAlert({
+                show: true,
+                message: "Failed to create project. Please try again.",
+                type: "error"
+            });
             console.error("Error creating project:", error);
+        } finally {
+            setIsUploading(false); // Hide loader
         }
     };
+
+
 
     const handleEditClick = (project) => {
         setEditingProject(project);
@@ -157,6 +219,18 @@ export default function ProjectList() {
                 <div className="w-1/3 bg-yellow-500 h-[100vh] hidden md:block"></div>
 
                 <div className="w-full">
+                    {isUploading && (
+                        <div className="w-full flex justify-center items-center py-3">
+                            <div className="flex items-center gap-2">
+                                <svg className="animate-spin h-5 w-5 text-black" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path>
+                                </svg>
+                                <span className="font-med text-black">Updating...</span>
+                            </div>
+                        </div>
+                    )}
+
                     {showCreateDrawer && (
                         <div className="w-full flex justify-center pb-10">
                             <div className="w-[85%] animate-drawerSlideDown">
@@ -167,6 +241,11 @@ export default function ProjectList() {
                                     setTitle={setCreateTitle}
                                     description={createDescription}
                                     setDescription={setCreateDescription}
+                                    source={source} setSource={setSource}
+                                    liveDemo={liveDemo} setLiveDemo={setLiveDemo}
+                                    technologies={technologies} setTechnologies={setTechnologies}
+                                    handleImageUpload={handleImageUpload}
+                                    handleVideoUpload={handleVideoUpload}
                                 />
                             </div>
                         </div>
@@ -198,7 +277,7 @@ export default function ProjectList() {
                                             <div className="relative h-10 w-10">
                                                 <img
                                                     className="absolute inset-0 h-full w-full object-contain"
-                                                    src={FolderIcon}
+                                                    src={ProjectIcon}
                                                     alt="Folder"
                                                 />
                                             </div>
@@ -250,6 +329,15 @@ export default function ProjectList() {
                     </div>
                 </div>
             </div>
+            {alert.show && (
+                <CustomAlert
+                    message={alert.message}
+                    type={alert.type}
+                    onClose={() => setAlert({ ...alert, show: false })}
+                />
+            )}
+
         </div>
+
     );
 }
