@@ -11,6 +11,7 @@ import DeleteIcon from '../assets/Images/delete.png';
 import DeleteIconB from '../assets/Images/deleteB.png';
 import CustomAlert from "../Components/CustomAlert";
 import ProjectVideo from "../Components/Project/ProjectVideo";
+import ConfirmPopup from '../Components/ConfirmPopup';
 
 export default function Project() {
     const navigate = useNavigate();
@@ -18,6 +19,31 @@ export default function Project() {
     const [project, setProject] = useState(null);
     const [loading, setLoading] = useState(true);
     const [showEditDrawer, setShowEditDrawer] = useState(false);
+
+    const [showPopup, setShowPopup] = useState(false);
+    const [popupMessage, setPopupMessage] = useState("");
+    const [onConfirmCallback, setOnConfirmCallback] = useState(() => () => { });
+
+    const confirmVideoDelete = () => {
+        setPopupMessage("Are you sure you want to delete this video?");
+        setOnConfirmCallback(() => () => handleVideoDelete());
+        setShowPopup(true);
+    };
+
+    const confirmProjectDelete = () => {
+        setPopupMessage("This project will be permanently deleted. Continue?");
+        setOnConfirmCallback(() => () => handleDelete(project._id));
+        setShowPopup(true);
+    };
+
+
+    const confirmImageDelete = (image) => {
+        setPopupMessage("Are you sure you want to delete this image?");
+        setOnConfirmCallback(() => () => handleImageDelete(image));
+        setShowPopup(true);
+    };
+
+
 
     const toggleDrawer = () => setShowEditDrawer(!showEditDrawer);
 
@@ -320,6 +346,17 @@ export default function Project() {
                     onAddImage={handleAddImage}
                 />
             </div>
+            {showPopup && (
+                <PopupMessage
+                    message={popupMessage}
+                    onCancel={() => setShowPopup(false)}
+                    onConfirm={() => {
+                        onConfirmCallback();
+                        setShowPopup(false);
+                    }}
+                />
+            )}
+
         </div>
     );
 }

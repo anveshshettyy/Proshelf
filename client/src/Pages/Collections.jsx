@@ -12,6 +12,7 @@ import DeleteIconB from '../assets/Images/deleteB.png';
 import FolderIcon from '../assets/Images/folder.png';
 import EditIcon from '../assets/Images/edit.png';
 import { Folder } from 'lucide-react';
+import ConfirmPopup from '../Components/ConfirmPopup';
 
 export default function Collections() {
   const navigate = useNavigate();
@@ -25,6 +26,14 @@ export default function Collections() {
   const [editingCollection, setEditingCollection] = useState(null);
   const [editTitle, setEditTitle] = useState('');
   const [editDescription, setEditDescription] = useState('');
+
+  const [showPopup, setShowPopup] = useState(false);
+  const [selectedId, setSelectedId] = useState(null);
+
+  const requestDelete = (id) => {
+    setSelectedId(id);
+    setShowPopup(true);
+  };
 
   const fetchCollections = async () => {
     try {
@@ -85,14 +94,18 @@ export default function Collections() {
     }
   };
 
-  const handleDelete = async (id) => {
+  const handleDeleteConfirmed = async () => {
     try {
-      await axios.delete(`/api/category/delete/${id}`, { withCredentials: true });
-      setCollections((prev) => prev.filter((col) => col._id !== id));
+      await axios.delete(`/api/category/delete/${selectedId}`, { withCredentials: true });
+      setCollections((prev) => prev.filter((col) => col._id !== selectedId));
     } catch (err) {
       console.error('Error deleting collection:', err);
+    } finally {
+      setShowPopup(false);
+      setSelectedId(null);
     }
   };
+
 
   const toggleDrawer = () => {
     setShowDrawer((prev) => !prev);
@@ -106,25 +119,22 @@ export default function Collections() {
 
         <div className='flex justify-around font-med gap-3 text-gray-500 mt-5 text-sm md:text-[2.3vh]'>
           <div
-            className={`group border-2 rounded-2xl p-2 flex cursor-pointer items-center gap-2 transition duration-200 ${
-              showDrawer
+            className={`group border-2 rounded-2xl p-2 flex cursor-pointer items-center gap-2 transition duration-200 ${showDrawer
                 ? 'border-black text-black shadow-lg'
                 : 'border-gray-500 hover:border-black hover:text-black hover:shadow-lg'
-            }`}
+              }`}
             onClick={toggleDrawer}
           >
             <div className='relative h-5 w-5'>
               <img
-                className={`absolute inset-0 object-contain transition duration-200 ${
-                  showDrawer ? 'opacity-0' : 'opacity-100 group-hover:opacity-0'
-                }`}
+                className={`absolute inset-0 object-contain transition duration-200 ${showDrawer ? 'opacity-0' : 'opacity-100 group-hover:opacity-0'
+                  }`}
                 src={CreateIcon}
                 alt='Create Default'
               />
               <img
-                className={`absolute inset-0 object-contain transition duration-200 ${
-                  showDrawer ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
-                }`}
+                className={`absolute inset-0 object-contain transition duration-200 ${showDrawer ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
+                  }`}
                 src={CreateIconB}
                 alt='Create Hover'
               />
@@ -194,7 +204,7 @@ export default function Collections() {
                           alt='Folder'
                         />
                       </div>
- 
+
                       <div className='flex flex-col md:flex-row w-full md:items-center items-start justify-between'>
                         <div
                           onClick={() => navigate(`/projects/${collection._id}`)}
@@ -222,7 +232,7 @@ export default function Collections() {
 
                           <div
                             className='flex gap-1 items-center cursor-pointer'
-                            onClick={() => handleDelete(collection._id)}
+                            onClick={() => requestDelete(collection._id)}
                           >
                             <div className='relative h-4 w-4 md:h-5 md:w-5'>
                               <img
@@ -243,6 +253,17 @@ export default function Collections() {
           </div>
         </div>
       </div>
+      <ConfirmPopup
+        isOpen={showPopup}
+        message="Are you sure you want to delete this collection?"
+        onConfirm={handleDeleteConfirmed}
+        onCancel={() => {
+          setShowPopup(false);
+          setSelectedId(null);
+        }}
+      />
+
     </div>
+
   );
 }
