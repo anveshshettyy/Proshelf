@@ -250,7 +250,7 @@ exports.updateInfo = async (req, res) => {
 
       linkedin: req.body.linkedin,
       github: req.body.github,
-      twitter: req.body.twitter,
+      figma: req.body.figma,
       portfolio: req.body.portfolio,
       dribbble: req.body.dribbble,
       behance: req.body.behance,

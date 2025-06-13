@@ -316,10 +316,25 @@ exports.addProjectVideo = async (req, res) => {
       return res.status(400).json({ message: "Video must be under 95MB" });
     }
 
-    const uploadRes = await cloudinary.uploader.upload(videoFile.tempFilePath, {
-      resource_type: "video",
-      folder: "project_videos",
-    });
+    // Upload using streamifier
+    const streamUpload = () => {
+      return new Promise((resolve, reject) => {
+        const stream = cloudinary.uploader.upload_stream(
+          {
+            resource_type: "video",
+            folder: "project_videos",
+          },
+          (error, result) => {
+            if (result) resolve(result);
+            else reject(error);
+          }
+        );
+
+        streamifier.createReadStream(videoFile.data).pipe(stream);
+      });
+    };
+
+    const uploadRes = await streamUpload();
 
     const updatedProject = await Projects.findByIdAndUpdate(
       projectId,

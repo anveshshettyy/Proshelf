@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { User2, Mail, Phone, MapPin, Globe, Pencil, Linkedin, Github, Twitter, Briefcase, FileText, Link, Star } from 'lucide-react';
-import { FaYoutube, FaDribbble, FaBehance } from 'react-icons/fa';
+import { User2, Mail, Phone, MapPin, Globe, Pencil, Linkedin, Github,  Briefcase, FileText, Link, Star } from 'lucide-react';
+import { FaYoutube, FaDribbble, FaBehance , FaFigma } from 'react-icons/fa';
 import { RiEditFill } from "react-icons/ri";
 
 export default function UserOverview({ user, setUser, setAlert }) {
@@ -185,8 +185,8 @@ export default function UserOverview({ user, setUser, setAlert }) {
           {user.github && (
             <div><Github className="inline w-4 h-4 mr-2 text-slate-400" /><a href={user.github} target="_blank">GitHub</a></div>
           )}
-          {user.twitter && (
-            <div><Twitter className="inline w-4 h-4 mr-2 text-slate-400" /><a href={user.twitter} target="_blank">Twitter</a></div>
+          {user.figma && (
+            <div><FaFigma className="inline w-4 h-4 mr-2 text-slate-400" /><a href={user.figma} target="_blank">figma</a></div>
           )}
           {user.portfolio && (
             <div><Link className="inline w-4 h-4 mr-2 text-slate-400" /><a href={user.portfolio} target="_blank">Portfolio</a></div>

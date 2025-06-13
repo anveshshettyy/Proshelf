@@ -12,7 +12,7 @@ import DeleteIconB from '../assets/Images/deleteB.png';
 import ProjectIcon from '../assets/Images/project.png';
 import EditIcon from '../assets/Images/edit.png';
 import CustomAlert from '../Components/CustomAlert';
-
+import ConfirmPopup from '../Components/ConfirmPopup';
 
 export default function ProjectList() {
     const { id } = useParams();
@@ -20,10 +20,8 @@ export default function ProjectList() {
 
     const [isUploading, setIsUploading] = useState(false);
     const [alert, setAlert] = useState({ show: false, message: '', type: 'success' });
-
     const [projects, setProjects] = useState([]);
     const [category, setCategory] = useState(null);
-
     const [showCreateDrawer, setShowCreateDrawer] = useState(false);
     const [createTitle, setCreateTitle] = useState('');
     const [createDescription, setCreateDescription] = useState('');
@@ -36,8 +34,36 @@ export default function ProjectList() {
     const [source, setSource] = useState('');
     const [liveDemo, setLiveDemo] = useState('');
     const [technologies, setTechnologies] = useState('');
-    const [images, setImages] = useState(null); // For multiple images
-    const [video, setVideo] = useState(null);   // For video
+    const [images, setImages] = useState(null);
+    const [video, setVideo] = useState(null);
+
+    // Confirmation popup state
+    const [showPopup, setShowPopup] = useState(false);
+    const [popupMessage, setPopupMessage] = useState("");
+    const [onConfirmCallback, setOnConfirmCallback] = useState(() => () => { });
+
+    const confirmProjectDelete = (projectId) => {
+        setPopupMessage("This project will be permanently deleted. Continue?");
+        setOnConfirmCallback(() => () => handleDelete(projectId));
+        setShowPopup(true);
+    };
+
+    const cancelPopup = () => {
+        setShowPopup(false);
+        setOnConfirmCallback(() => () => {});
+    };
+
+    const handleDelete = async (projectId) => {
+        try {
+            await axios.delete(`/api/projects/delete/${projectId}`, { withCredentials: true });
+            setProjects((prev) => prev.filter((p) => p._id !== projectId));
+            setAlert({ show: true, message: "Project deleted successfully", type: "success" });
+            setShowPopup(false);
+        } catch (error) {
+            console.error("Error deleting project:", error);
+            setAlert({ show: true, message: "Failed to delete project", type: "error" });
+        }
+    };
 
     const handleImageUpload = (e) => {
         setImages(e.target.files);
@@ -122,8 +148,6 @@ export default function ProjectList() {
         }
     };
 
-
-
     const handleEditClick = (project) => {
         setEditingProject(project);
         setEditTitle(project.title);
@@ -149,16 +173,6 @@ export default function ProjectList() {
             setEditDescription('');
         } catch (error) {
             console.error("Error updating project:", error);
-        }
-    };
-
-
-    const handleDelete = async (projectId) => {
-        try {
-            await axios.delete(`/api/projects/delete/${projectId}`, { withCredentials: true });
-            setProjects((prev) => prev.filter((p) => p._id !== projectId));
-        } catch (error) {
-            console.error("Error deleting project:", error);
         }
     };
 
@@ -312,7 +326,7 @@ export default function ProjectList() {
 
                                                     <div
                                                         className="flex gap-1 items-center cursor-pointer"
-                                                        onClick={() => handleDelete(project._id)}
+                                                        onClick={() => confirmProjectDelete(project._id)}
                                                     >
                                                         <div className="relative h-4 w-4 md:h-5 md:w-5">
                                                             <img
@@ -333,6 +347,14 @@ export default function ProjectList() {
                     </div>
                 </div>
             </div>
+            {showPopup && (
+                <ConfirmPopup
+                    isOpen={showPopup}
+                    message={popupMessage}
+                    onConfirm={onConfirmCallback}
+                    onCancel={cancelPopup}
+                />
+            )}
             {alert.show && (
                 <CustomAlert
                     message={alert.message}
@@ -340,7 +362,6 @@ export default function ProjectList() {
                     onClose={() => setAlert({ ...alert, show: false })}
                 />
             )}
-
         </div>
 
     );

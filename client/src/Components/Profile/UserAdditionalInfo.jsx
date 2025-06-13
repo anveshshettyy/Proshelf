@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { User2, Mail, Phone, MapPin, Globe, Pencil, Linkedin, Github, Twitter, Briefcase, FileText, Link, Star } from 'lucide-react';
-import { FaYoutube, FaDribbble, FaBehance } from 'react-icons/fa';
+import { User2, Mail, Phone, MapPin, Globe, Pencil, Linkedin, Github,  Briefcase, FileText, Link, Star } from 'lucide-react';
+import { FaYoutube, FaDribbble, FaBehance, FaFigma } from 'react-icons/fa';
 import { AiOutlinePlus } from 'react-icons/ai';
 import { FiEdit } from 'react-icons/fi';
 
@@ -15,7 +15,7 @@ export default function UserAdditionalInfo({ user, setUser, setAlert }) {
     website: user.website || '',
     linkedin: user.linkedin || '',
     github: user.github || '',
-    twitter: user.twitter || '',
+    figma: user.figma || '',
     portfolio: user.portfolio || '',
     dribbble: user.dribbble || '',
     behance: user.behance || '',
@@ -82,7 +82,7 @@ export default function UserAdditionalInfo({ user, setUser, setAlert }) {
       website: user.website || '',
       linkedin: user.linkedin || '',
       github: user.github || '',
-      twitter: user.twitter || '',
+      figma: user.figma || '',
       portfolio: user.portfolio || '',
       dribbble: user.dribbble || '',
       behance: user.behance || '',
@@ -131,7 +131,7 @@ export default function UserAdditionalInfo({ user, setUser, setAlert }) {
             <input name="portfolio" value={form.portfolio} onChange={handleChange} placeholder="Portfolio" className="border rounded p-2" />
             <input name="linkedin" value={form.linkedin} onChange={handleChange} placeholder="LinkedIn" className="border rounded p-2" />
             <input name="github" value={form.github} onChange={handleChange} placeholder="GitHub" className="border rounded p-2" />
-            <input name="twitter" value={form.twitter} onChange={handleChange} placeholder="Twitter" className="border rounded p-2" />
+            <input name="figma" value={form.figma} onChange={handleChange} placeholder="Figma" className="border rounded p-2" />
             <input name="dribbble" value={form.dribbble} onChange={handleChange} placeholder="Dribbble" className="border rounded p-2" />
             <input name="behance" value={form.behance} onChange={handleChange} placeholder="Behance" className="border rounded p-2" />
             <input name="youtube" value={form.youtube} onChange={handleChange} placeholder="YouTube" className="border rounded p-2" />
@@ -259,7 +259,7 @@ export default function UserAdditionalInfo({ user, setUser, setAlert }) {
               {[
                 { icon: <Linkedin className="w-4 h-4 text-slate-500" />, name: 'LinkedIn', value: user.linkedin },
                 { icon: <Github className="w-4 h-4 text-slate-500" />, name: 'GitHub', value: user.github },
-                { icon: <Twitter className="w-4 h-4 text-slate-500" />, name: 'Twitter', value: user.twitter },
+                { icon: <FaFigma className="w-4 h-4 text-slate-500" />, name: 'Figma', value: user.figma },
                 { icon: <Link className="w-4 h-4 text-slate-500" />, name: 'Portfolio', value: user.portfolio },
                 { icon: <FaDribbble className="w-4 h-4 text-slate-500" />, name: 'Dribbble', value: user.dribbble },
                 { icon: <FaBehance className="w-4 h-4 text-slate-500" />, name: 'Behance', value: user.behance },

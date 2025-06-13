@@ -81,7 +81,7 @@ export default function ProjectGallery({ slides, onDeleteImage, onAddImage }) {
                 <button
                   onClick={() => onDeleteImage(slide.original)}
 
-                  className="absolute top-2 right-2 p-1 bg-black/50 hover:bg-black/80 text-white rounded-full opacity-0 group-hover:opacity-100 transition"
+                  className="absolute top-2 right-2 p-1 bg-black/50 hover:bg-black/80 text-white rounded-full md:opacity-0 group-hover:opacity-100 transition"
                 >
                   <Trash2 className="w-4 h-4" />
                 </button>

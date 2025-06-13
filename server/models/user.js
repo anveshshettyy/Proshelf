@@ -27,7 +27,7 @@ const userSchema = new mongoose.Schema({
 
   linkedin: { type: String },
   github: { type: String },
-  twitter: { type: String },
+  figma: { type: String },
   portfolio: { type: String },
   dribbble: { type: String },
   behance: { type: String },

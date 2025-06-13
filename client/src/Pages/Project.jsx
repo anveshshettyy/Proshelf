@@ -104,7 +104,7 @@ export default function Project() {
 
             setProject((prev) => ({ ...prev, video: "" }));
             setAlert({ message: "Video deleted successfully.", type: "success" });
-
+            setShowPopup(false); // Close popup after deletion
         } catch (err) {
             console.error("Failed to delete video:", err);
             setAlert({ message: "Failed to delete video. Please try again.", type: "error" });
@@ -117,13 +117,13 @@ export default function Project() {
 
             const res = await axios.put(
                 `/api/projects/remove-image/${project._id}`,
-                { public_id: image.public_id }, // ✅ Fix here
+                { public_id: image.public_id }, // 
                 { withCredentials: true }
             );
 
             setProject((prev) => ({ ...prev, images: res.data.images }));
             setAlert({ message: "Image deleted successfully.", type: "success" });
-
+            setShowPopup(false); // Close popup after deletion
         } catch (err) {
             console.error("Failed to delete image:", err);
             setAlert({ message: "Failed to delete image. Please try again.", type: "error" });
@@ -159,7 +159,7 @@ export default function Project() {
 
             setAlert({ message: "Project deleted successfully!", type: "success" });
             navigate(-1); // or navigate("/collections")
-
+            setShowPopup(false); // Close popup after deletion
         } catch (error) {
             console.error("Error deleting project:", error);
             setAlert({ message: "Failed to delete project.", type: "error" });
@@ -171,7 +171,10 @@ export default function Project() {
         ? project.images.map(img => ({ src: img.url, type: "image", original: img }))
         : [];
 
-
+    const cancelPopup = () => {
+        setShowPopup(false);
+        setOnConfirmCallback(() => () => {});
+    };
 
     return (
         <div>
@@ -196,17 +199,17 @@ export default function Project() {
                     <div onClick={toggleDrawer} className="group border-2 rounded-2xl p-2 flex cursor-pointer items-center gap-2 transition duration-200 border-gray-500 hover:border-black hover:text-black hover:shadow-lg px-5">
                         <div className='relative h-5 w-5'>
                             <img className={`absolute inset-0 object-contain transition duration-200 ${showEditDrawer ? 'opacity-0' : 'opacity-100 group-hover:opacity-0'}`} src={CreateIcon} alt='Create Default' />
-                            <img className={`absolute inset-0 object-contain transition duration-200 ${showEditDrawer ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`} src={CreateIconB} alt='Create Hover' />
+                            <img className={`absolute inset-0 object-contain transition duration-200 ${showEditDrawer ? 'opacity-100' : 'md:opacity-0 group-hover:opacity-100'}`} src={CreateIconB} alt='Create Hover' />
                         </div>
                         <h1>Edit Project</h1>
                     </div>
 
                     <div className='group border-2 rounded-2xl border-gray-500 p-2 flex cursor-pointer items-center gap-2 hover:border-black hover:text-black hover:shadow-lg duration-200 transition'
-                        onClick={() => handleDelete(project._id)}
+                        onClick={confirmProjectDelete}
                     >
                         <div className='relative h-5 w-5'>
-                            <img className='absolute inset-0 object-contain opacity-100 group-hover:opacity-0 transition duration-200' src={DeleteIcon} alt='Delete Default' />
-                            <img className='absolute inset-0 object-contain opacity-0 group-hover:opacity-100 transition duration-200' src={DeleteIconB} alt='Delete Hover' />
+                            <img className='absolute inset-0 object-contain opacity-100 md:group-hover:opacity-0 transition duration-200' src={DeleteIcon} alt='Delete Default' />
+                            <img className='absolute inset-0 object-contain md:opacity-0 group-hover:opacity-100 transition duration-200' src={DeleteIconB} alt='Delete Hover' />
                         </div>
                         <h1>Delete Project</h1>
                     </div>
@@ -337,23 +340,21 @@ export default function Project() {
                             setAlert({ message: "Video upload failed.", type: "error" });
                         }
                     }}
-                    onDelete={handleVideoDelete}
+                    onDelete={confirmVideoDelete}
                 />
 
                 <ProjectGallery
                     slides={imageSlides}
-                    onDeleteImage={handleImageDelete}
+                    onDeleteImage={confirmImageDelete}
                     onAddImage={handleAddImage}
                 />
             </div>
             {showPopup && (
-                <PopupMessage
+                <ConfirmPopup
+                    isOpen={showPopup}
                     message={popupMessage}
-                    onCancel={() => setShowPopup(false)}
-                    onConfirm={() => {
-                        onConfirmCallback();
-                        setShowPopup(false);
-                    }}
+                    onConfirm={onConfirmCallback}
+                    onCancel={cancelPopup}
                 />
             )}
 
