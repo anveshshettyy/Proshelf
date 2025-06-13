@@ -19,9 +19,7 @@ const projectRoutes = require('./routes/projects.route');
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-app.use(fileUpload({
-  useTempFiles: true,
-}));
+app.use(fileUpload());
 
 app.use(cors({
   origin: 'http://localhost:5173', 

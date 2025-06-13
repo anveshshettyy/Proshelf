@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { ChevronRight, Edit2, Trash2, ExternalLink, Github } from "lucide-react";
+import { ChevronRight, Edit2, Trash2, ExternalLink, Github, ArrowUpRight, EditIcon, Link2, LinkIcon, Link2Icon } from "lucide-react";
 import Navbar from "../Components/Navbar";
-import ProjectGallery from "../Components/ProjectGallery";
-import EditProjectDrawer from "../Components/EditProjectDrawer";
+import ProjectGallery from "../Components/Project/ProjectGallery";
+import EditProjectDrawer from "../Components/Project/UpdateProjectDrawer";
 import CreateIcon from '../assets/Images/add.png';
 import CreateIconB from '../assets/Images/addB.png';
 import DeleteIcon from '../assets/Images/delete.png';
 import DeleteIconB from '../assets/Images/deleteB.png';
+import CustomAlert from "../Components/CustomAlert";
+import ProjectVideo from "../Components/Project/ProjectVideo";
 
 export default function Project() {
     const navigate = useNavigate();
@@ -19,12 +21,22 @@ export default function Project() {
 
     const toggleDrawer = () => setShowEditDrawer(!showEditDrawer);
 
+    const [alert, setAlert] = useState(null);
+    const dismissAlert = () => setAlert(null);
+
+    useEffect(() => {
+        if (alert) {
+            const timer = setTimeout(() => setAlert(null), 5000);
+            return () => clearTimeout(timer);
+        }
+    }, [alert]);
+
     useEffect(() => {
         const fetchProject = async () => {
             try {
                 setLoading(true);
                 const res = await axios.get(`/api/projects/single/${id}`, { withCredentials: true });
-                setProject(res.data.project);
+                setProject(res.data.project); // Set project first
             } catch (error) {
                 console.error("Error fetching single project:", error);
             } finally {
@@ -34,88 +46,184 @@ export default function Project() {
         fetchProject();
     }, [id]);
 
+
     if (loading) return <div>Loading...</div>;
     if (!project) return <div>Project not found</div>;
 
-    const imageSlides = (project.images || []).map((url) => ({ src: url, type: "image" }));
+    const handleEditSubmit = async (formData) => {
+        try {
+            const res = await axios.post(`/api/projects/update/${project._id}`, formData, {
+                withCredentials: true,
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
+            });
+
+            setProject(res.data.project);
+            setShowEditDrawer(false);
+        } catch (err) {
+            console.error("Failed to update project:", err);
+        }
+    };
+
+    const handleVideoDelete = async () => {
+        try {
+            setAlert({ message: "Deleting video. Please wait...", type: "info" });
+
+            await axios.put(
+                `/api/projects/remove-video/${project._id}`,
+                {},
+                { withCredentials: true }
+            );
+
+            setProject((prev) => ({ ...prev, video: "" }));
+            setAlert({ message: "Video deleted successfully.", type: "success" });
+
+        } catch (err) {
+            console.error("Failed to delete video:", err);
+            setAlert({ message: "Failed to delete video. Please try again.", type: "error" });
+        }
+    };
+
+    const handleImageDelete = async (image) => {
+        try {
+            setAlert({ message: "Deleting image. Please wait...", type: "info" });
+
+            const res = await axios.put(
+                `/api/projects/remove-image/${project._id}`,
+                { public_id: image.public_id }, // ✅ Fix here
+                { withCredentials: true }
+            );
+
+            setProject((prev) => ({ ...prev, images: res.data.images }));
+            setAlert({ message: "Image deleted successfully.", type: "success" });
+
+        } catch (err) {
+            console.error("Failed to delete image:", err);
+            setAlert({ message: "Failed to delete image. Please try again.", type: "error" });
+        }
+    };
+
+
+    const handleAddImage = async (files) => {
+        const formData = new FormData();
+        for (let file of files) {
+            formData.append("images", file);
+        }
+
+        try {
+            setAlert({ message: "Adding image. Please wait...", type: "info" });
+
+            const res = await axios.post(`/api/projects/add-image/${project._id}`, formData, {
+                withCredentials: true,
+                headers: { "Content-Type": "multipart/form-data" },
+            });
+
+            setProject((prev) => ({ ...prev, images: res.data.images }));
+            setAlert({ message: "Image Added successfully.", type: "success" });
+            window.location.reload();
+        } catch (err) {
+            console.error(err);
+        }
+    };
+
+    const handleDelete = async (projectId) => {
+        try {
+            await axios.delete(`/api/projects/delete/${projectId}`, { withCredentials: true });
+
+            setAlert({ message: "Project deleted successfully!", type: "success" });
+            navigate(-1); // or navigate("/collections")
+
+        } catch (error) {
+            console.error("Error deleting project:", error);
+            setAlert({ message: "Failed to delete project.", type: "error" });
+        }
+    };
+
+
+    const imageSlides = Array.isArray(project.images)
+        ? project.images.map(img => ({ src: img.url, type: "image", original: img }))
+        : [];
+
+
 
     return (
         <div>
             <Navbar />
 
-            {/* Breadcrumbs */}
+            {alert && <CustomAlert message={alert.message} type={alert.type} onClose={dismissAlert} />}
+
             <div className="flex items-center gap-x-3 font-med text-gray-700 md:px-15 px-4">
-                <Link to="/collections" className="">
-                    Collections
-                </Link>
+                <Link to="/collections" className="hover:underline">Collections</Link>
                 <ChevronRight className="w-4 h-4" />
-                <h1 className="cursor-pointer" onClick={() => navigate(-1)}>Projects</h1>
+                <h1 className="cursor-pointer hover:underline" onClick={() => navigate(-1)}>Projects</h1>
                 <ChevronRight className="w-4 h-4" />
                 <h1 className="font-semibold text-black">Project</h1>
             </div>
 
-            <div className="p-2 md:p-15 md:flex md:justify-between md:items-center">
-                <div className="flex flex-col gap-2">
+            <div className="py-2 px-4 md:p-15 md:flex  md:flex-row md:justify-between md:items-center gap-4  ">
+                <div className="flex flex-col gap-2 md:w-[70%]">
                     <h1 className="text-4xl md:text-5xl font-head">{project.title}</h1>
                     <p className="mb-6 font-med">{project.description}</p>
                 </div>
-                <div className="flex justify-around font-med gap-3 text-gray-500 mt-5 text-sm md:text-[2.3vh]">
-                    {/* Edit Project Button */}
-                    <div
-                        className="group border-2 rounded-2xl p-2 flex cursor-pointer items-center gap-2 transition duration-200 border-gray-500 hover:border-black hover:text-black hover:shadow-lg"
-                        onClick={toggleDrawer}
-                    >
+                <div className="flex justify-around font-med gap-3 text-gray-500 mb-5 text-sm md:text-[2.3vh] ">
+                    <div onClick={toggleDrawer} className="group border-2 rounded-2xl p-2 flex cursor-pointer items-center gap-2 transition duration-200 border-gray-500 hover:border-black hover:text-black hover:shadow-lg px-5">
                         <div className='relative h-5 w-5'>
-                            <img
-                                className={`absolute inset-0 object-contain transition duration-200 ${showEditDrawer ? 'opacity-0' : 'opacity-100 group-hover:opacity-0'
-                                    }`}
-                                src={CreateIcon}
-                                alt='Create Default'
-                            />
-                            <img
-                                className={`absolute inset-0 object-contain transition duration-200 ${showEditDrawer ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
-                                    }`}
-                                src={CreateIconB}
-                                alt='Create Hover'
-                            />
+                            <img className={`absolute inset-0 object-contain transition duration-200 ${showEditDrawer ? 'opacity-0' : 'opacity-100 group-hover:opacity-0'}`} src={CreateIcon} alt='Create Default' />
+                            <img className={`absolute inset-0 object-contain transition duration-200 ${showEditDrawer ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`} src={CreateIconB} alt='Create Hover' />
                         </div>
-                        <h1>Create Collection</h1>
+                        <h1>Edit Project</h1>
                     </div>
 
-                    {/* Delete Project Button */}
-                    <div className='group border-2 rounded-2xl border-gray-500 p-2 flex cursor-pointer items-center gap-2 hover:border-black hover:text-black hover:shadow-lg duration-200 transition'>
+                    <div className='group border-2 rounded-2xl border-gray-500 p-2 flex cursor-pointer items-center gap-2 hover:border-black hover:text-black hover:shadow-lg duration-200 transition'
+                        onClick={() => handleDelete(project._id)}
+                    >
                         <div className='relative h-5 w-5'>
-                            <img
-                                className='absolute inset-0 object-contain opacity-100 group-hover:opacity-0 transition duration-200'
-                                src={DeleteIcon}
-                                alt='Delete Default'
-                            />
-                            <img
-                                className='absolute inset-0 object-contain opacity-0 group-hover:opacity-100 transition duration-200'
-                                src={DeleteIconB}
-                                alt='Delete Hover'
-                            />
+                            <img className='absolute inset-0 object-contain opacity-100 group-hover:opacity-0 transition duration-200' src={DeleteIcon} alt='Delete Default' />
+                            <img className='absolute inset-0 object-contain opacity-0 group-hover:opacity-100 transition duration-200' src={DeleteIconB} alt='Delete Hover' />
                         </div>
-                        <h1>Delete Collection</h1>
+                        <h1>Delete Project</h1>
                     </div>
                 </div>
             </div>
 
-            {/* Edit Project Drawer */}
+
             {showEditDrawer && (
-                <EditProjectDrawer
-                    project={project}
-                    onClose={() => setShowEditDrawer(false)}
-                // Pass any other props needed for your EditProjectDrawer
-                />
+                <div className="px-15 pb-5">
+                    <EditProjectDrawer
+                        initialData={project}
+                        onClose={() => setShowEditDrawer(false)}
+                        onSubmit={handleEditSubmit}
+                    />
+                </div>
+
             )}
 
-            {/* Project Content */}
             <div className="p-4 md:px-15 md:py-6 w-full">
+                <h1 className="text-3xl font-head pb-5">About Project</h1>
+                <div className={`${project.about ? "overflow-y-auto" : "overflow-y-hidden"
+                    } max-h-[500px] pr-2 bg-slate-100 md:px-10 md:py-7 rounded-xl p-5`}
+                    data-lenis-prevent>
+                    {project.about ? (
+                        <p className="whitespace-pre-wrap font-med text-gray-700 leading-relaxed tracking-wide">
+                            {project.about}
+                        </p>
+                    ) : (
+                        <div className="text-center text-gray-600">
+                            <p className="text-lg font-med mb-2  ">No About section added yet.</p>
+                            <button
+                                onClick={toggleDrawer}
+                                className="text-slate-600 hover: underline font-med cursor-pointer flex justify-center w-full items-center gap-2 "
+                            >
+                                Add About Info
+                                <EditIcon className="h-5 w-5" />
+                            </button>
+                        </div>
+                    )}
+                </div>
 
-                {/* Technologies */}
                 {project.technologies && project.technologies.length > 0 && (
-                    <div className="mb-6">
+                    <div className="mt-6 mb-6">
                         <h2 className="font-head text-xl mb-2">Technologies</h2>
                         <div className="flex flex-wrap gap-2">
                             {project.technologies.map((tech, index) => (
@@ -128,51 +236,89 @@ export default function Project() {
                 )}
 
                 {/* Source Code */}
-                {project.source && (
+                {project.source ? (
                     <div className="mb-6">
                         <h2 className="font-head text-xl mb-2">Source Code</h2>
                         <a
                             href={project.source}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="flex items-center gap-2 text-blue-600 underline font-med"
+                            className="flex items-center gap-2 text-slate-700 underline font-med"
                         >
-                            <Github className="w-5 h-5" />
-                            View on GitHub
+                            <LinkIcon /> {project.source}
                         </a>
+                    </div>
+                ) : (
+                    <div className="mb-6   text-gray-600">
+                        <h2 className="font-head text-xl mb-2 text-black">Source Code</h2>
+
+                        <div className="flex gap-x-2 ">
+                            <p className="mb-1 font-med">No Source code link available.</p>
+                            <button onClick={toggleDrawer} className=" underline hover:text-black cursor-pointer flex gap-2  font-med">Add Source code
+                                <EditIcon className="h-5 w-5" />
+                            </button>
+                        </div>
                     </div>
                 )}
 
                 {/* Live Demo */}
-                {project.liveDemo && (
+                {project.liveDemo ? (
                     <div className="mb-6">
                         <h2 className="font-head text-xl mb-2">Live Demo</h2>
                         <a
                             href={project.liveDemo}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="flex items-center gap-2 text-blue-600 underline font-med"
+                            className="flex items-center gap-2 text-slate-700 underline font-med"
                         >
                             <ExternalLink className="w-5 h-5" />
-                            Visit Live Demo
+                            {project.liveDemo}
                         </a>
                     </div>
-                )}
-
-                {/* Video */}
-                {project.video && (
-                    <div className="mb-6">
-                        <h2 className="font-head text-xl mb-2">Video Demo</h2>
-                        <video
-                            src={project.video}
-                            controls
-                            className="w-full max-h-[400px] rounded-lg object-contain"
-                        />
+                ) : (
+                    <div className="mb-6  text-gray-600">
+                        <h2 className="font-head text-xl mb-2 text-black ">Live Demo</h2>
+                        <div className="flex gap-x-2 ">
+                            <p className="mb-1 font-med">No Live Demo link available.</p>
+                            <button onClick={toggleDrawer} className=" underline hover:text-black cursor-pointer flex gap-2  font-med">Add Live Demo
+                                <EditIcon className="h-5 w-5" />
+                            </button>
+                        </div>
                     </div>
                 )}
 
-                {/* Images gallery */}
-                {imageSlides.length > 0 && <ProjectGallery slides={imageSlides} />}
+                <ProjectVideo
+                    videoUrl={project.video}
+                    onUpload={async (file) => {
+                        const formData = new FormData();
+                        formData.append("video", file);
+
+                        try {
+                            setAlert({ message: "Uploading video...", type: "info" });
+
+                            const res = await axios.put(`/api/projects/add-video/${project._id}`, formData, {
+                                withCredentials: true,
+                                headers: { "Content-Type": "multipart/form-data" },
+                            });
+
+
+
+
+                            setProject(res.data.project);
+                            setAlert({ message: "Video uploaded successfully.", type: "success" });
+                        } catch (err) {
+                            console.error(err);
+                            setAlert({ message: "Video upload failed.", type: "error" });
+                        }
+                    }}
+                    onDelete={handleVideoDelete}
+                />
+
+                <ProjectGallery
+                    slides={imageSlides}
+                    onDeleteImage={handleImageDelete}
+                    onAddImage={handleAddImage}
+                />
             </div>
         </div>
     );

@@ -33,8 +33,8 @@ export default function Navbar() {
       <Link to="/collections" className={getLinkClass('/collections')}>
         Collections
       </Link>
-      <Link to="/contact" className={getLinkClass('/contact')}>
-        Contact
+      <Link to="/profile" className={getLinkClass('/contact')}>
+        Profile
       </Link>
       <button
         onClick={handleLogout}

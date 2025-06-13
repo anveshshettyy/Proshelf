@@ -1,7 +1,9 @@
+import { useNavigate } from 'react-router-dom';
 import Navbar from '../Components/Navbar';
 import ThreeScene from '../Components/ThreeScene';
 
 export default function Home() {
+  const navigate = useNavigate();
   return (
     <div>
       <Navbar />
@@ -26,7 +28,7 @@ export default function Home() {
               Effortlessly store and organize your project’s images, videos, designs, and code — all in one sleek, easy-to-use hub. Showcase your work, track your progress, and keep your creative flow unstoppable.
             </p>
 
-            <div className='border border-gray-500 py-3 flex items-center justify-center w-1/2 rounded-3xl  gap-4 group md:hover:bg-black duration-200 ease-in cursor-pointer mt-5 '>
+            <div onClick={() => navigate('/collections')} className='border border-gray-500 py-3 flex items-center justify-center w-1/2 rounded-3xl  gap-4 group md:hover:bg-black duration-200 ease-in cursor-pointer mt-5 '  >
               <h1 className='text-1xl font-med md:group-hover:text-white duration-200 ease-in '>Get Started</h1>
               <div className='rounded-full bg-black h-3 w-3 md:group-hover:bg-white duration-200 ease-in  '></div>
             </div>

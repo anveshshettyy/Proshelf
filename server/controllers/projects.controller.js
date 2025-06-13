@@ -1,10 +1,13 @@
 const cloudinary = require("../lib/cloudinary");
 const Category = require("../models/category");
 const Projects = require("../models/projects");
+const MAX_VIDEO_SIZE_MB = 25;
+const streamifier = require("streamifier");
 
 exports.createProject = async (req, res) => {
   try {
-    const { title, description, source, liveDemo, technologies } = req.body;
+    const { title, description, about, source, liveDemo, technologies } =
+      req.body;
     const categoryId = req.params.id;
 
     if (!title) {
@@ -14,6 +17,32 @@ exports.createProject = async (req, res) => {
       return res.status(400).json({ message: "Category ID is required" });
     }
 
+    const uploadImageToCloudinary = (buffer) => {
+      return new Promise((resolve, reject) => {
+        const stream = cloudinary.uploader.upload_stream(
+          { folder: "project_images" },
+          (error, result) => {
+            if (error) return reject(error);
+            resolve(result);
+          }
+        );
+        streamifier.createReadStream(buffer).pipe(stream);
+      });
+    };
+
+    const uploadVideoToCloudinary = (buffer) => {
+      return new Promise((resolve, reject) => {
+        const stream = cloudinary.uploader.upload_stream(
+          { resource_type: "video", folder: "project_videos" },
+          (error, result) => {
+            if (error) return reject(error);
+            resolve(result);
+          }
+        );
+        streamifier.createReadStream(buffer).pipe(stream);
+      });
+    };
+
     const uploadImageUrls = [];
 
     if (req.files?.images) {
@@ -21,44 +50,52 @@ exports.createProject = async (req, res) => {
         ? req.files.images
         : [req.files.images];
 
-      const imageUploadPromises = imageFiles.map((image) =>
-        cloudinary.uploader.upload(image.tempFilePath, {
-          folder: "project_images",
-        })
+      const imageUploadResponses = await Promise.all(
+        imageFiles.map((image) => uploadImageToCloudinary(image.data))
       );
 
-      const imageUploadResponses = await Promise.all(imageUploadPromises);
       uploadImageUrls.push(
-        ...imageUploadResponses.map((resp) => resp.secure_url)
+        ...imageUploadResponses.map((resp) => ({
+          url: resp.secure_url,
+          public_id: resp.public_id,
+        }))
       );
     }
 
-    let uploadedVideo = "";
+    let uploadedVideo = null;
+
     if (req.files?.video) {
       const videoFile = req.files.video;
-      const uploadResponse = await cloudinary.uploader.upload(
-        videoFile.tempFilePath,
-        {
-          resource_type: "video",
-          folder: "project_videos",
-        }
-      );
-      uploadedVideo = uploadResponse.secure_url;
+
+      const sizeInMB = videoFile.size / (1024 * 1024);
+
+      if (sizeInMB > MAX_VIDEO_SIZE_MB) {
+        return res.status(400).json({
+          message: `Video size should be less than ${MAX_VIDEO_SIZE_MB} MB`,
+        });
+      }
+
+      const videoUploadResponse = await uploadVideoToCloudinary(videoFile.data);
+
+      uploadedVideo = {
+        url: videoUploadResponse.secure_url,
+        public_id: videoUploadResponse.public_id,
+      };
     }
 
     const newProject = new Projects({
       title,
       description,
+      about,
       images: uploadImageUrls,
       video: uploadedVideo,
       source,
-      liveDemo, 
+      liveDemo,
       technologies: Array.isArray(technologies)
         ? technologies.map((t) => t.trim())
         : typeof technologies === "string"
         ? technologies.split(",").map((t) => t.trim())
         : [],
-
       categoryId,
     });
 
@@ -81,43 +118,86 @@ exports.createProject = async (req, res) => {
 exports.updateProject = async (req, res) => {
   try {
     const projectId = req.params.id;
-    const { title, description, source, liveDemo, technologies } = req.body;
+    const { title, description, about, source, liveDemo, technologies } =
+      req.body;
 
     const updateData = {};
+
     if (title !== undefined) updateData.title = title;
     if (description !== undefined) updateData.description = description;
+    if (about !== undefined) updateData.about = about;
     if (source !== undefined) updateData.source = source;
     if (liveDemo !== undefined) updateData.liveDemo = liveDemo;
-    if (technologies !== undefined)
-      updateData.technologies = technologies.split(",").map((t) => t.trim());
+
+    if (technologies !== undefined) {
+      updateData.technologies = Array.isArray(technologies)
+        ? technologies.map((t) => t.trim())
+        : technologies.split(",").map((t) => t.trim());
+    }
+
+    // ---------- IMAGE UPLOAD ----------
+    const uploadImageToCloudinary = (buffer) => {
+      return new Promise((resolve, reject) => {
+        const stream = cloudinary.uploader.upload_stream(
+          { folder: "project_images" },
+          (error, result) => {
+            if (error) return reject(error);
+            resolve(result);
+          }
+        );
+        streamifier.createReadStream(buffer).pipe(stream);
+      });
+    };
 
     if (req.files?.images) {
       const imageFiles = Array.isArray(req.files.images)
         ? req.files.images
         : [req.files.images];
 
-      const imageUploadPromises = imageFiles.map((image) =>
-        cloudinary.uploader.upload(image.tempFilePath, {
-          folder: "project_images",
-        })
+      const imageUploadResponses = await Promise.all(
+        imageFiles.map((image) => uploadImageToCloudinary(image.data))
       );
 
-      const imageUploadResponses = await Promise.all(imageUploadPromises);
-      updateData.images = imageUploadResponses.map((resp) => resp.secure_url);
+      updateData.images = imageUploadResponses.map((resp) => ({
+        url: resp.secure_url,
+        public_id: resp.public_id,
+      }));
     }
+
+    // ---------- VIDEO UPLOAD ----------
+    const uploadVideoToCloudinary = (buffer) => {
+      return new Promise((resolve, reject) => {
+        const stream = cloudinary.uploader.upload_stream(
+          { resource_type: "video", folder: "project_videos" },
+          (error, result) => {
+            if (error) return reject(error);
+            resolve(result);
+          }
+        );
+        streamifier.createReadStream(buffer).pipe(stream);
+      });
+    };
 
     if (req.files?.video) {
       const videoFile = req.files.video;
-      const uploadResponse = await cloudinary.uploader.upload(
-        videoFile.tempFilePath,
-        {
-          resource_type: "video",
-          folder: "project_videos",
-        }
-      );
-      updateData.video = uploadResponse.secure_url;
+      const sizeInMB = videoFile.size / (1024 * 1024);
+      const MAX_VIDEO_SIZE_MB = 95;
+
+      if (sizeInMB > MAX_VIDEO_SIZE_MB) {
+        return res.status(400).json({
+          message: `Video size should be less than ${MAX_VIDEO_SIZE_MB} MB`,
+        });
+      }
+
+      const uploadResponse = await uploadVideoToCloudinary(videoFile.data);
+
+      updateData.video = {
+        url: uploadResponse.secure_url,
+        public_id: uploadResponse.public_id,
+      };
     }
 
+    // ---------- UPDATE DATABASE ----------
     const updatedProject = await Projects.findByIdAndUpdate(
       projectId,
       { $set: updateData },
@@ -141,15 +221,12 @@ exports.updateProject = async (req, res) => {
 exports.getSingleProject = async (req, res) => {
   try {
     const projectId = req.params.id;
-    
-    
 
-    const project = await Projects.findById(projectId).populate('categoryId'); // optional populate
+    const project = await Projects.findById(projectId).populate("categoryId"); // optional populate
 
     if (!project) {
       return res.status(404).json({ message: "Project not found" });
     }
-    
 
     res.status(200).json({ project });
   } catch (error) {
@@ -164,7 +241,9 @@ exports.getCategoryWithProjects = async (req, res) => {
     if (!category)
       return res.status(404).json({ message: "Category not found" });
 
-    const projects = await Projects.find({ categoryId: req.params.id }).select('title description');
+    const projects = await Projects.find({ categoryId: req.params.id }).select(
+      "title description"
+    );
 
     res.status(200).json({ category, projects });
   } catch (error) {
@@ -177,11 +256,7 @@ exports.addProjectImage = async (req, res) => {
   try {
     const projectId = req.params.id;
 
-    if (!projectId) {
-      return res.status(400).json({ message: "Project ID is required" });
-    }
-
-    if (!req.files || !req.files.images) {
+    if (!req.files?.images) {
       return res.status(400).json({ message: "No images provided" });
     }
 
@@ -189,21 +264,31 @@ exports.addProjectImage = async (req, res) => {
       ? req.files.images
       : [req.files.images];
 
-    const uploadedUrls = [];
+    const uploadImageToCloudinary = (buffer) => {
+      return new Promise((resolve, reject) => {
+        const stream = cloudinary.uploader.upload_stream(
+          { folder: "project_images" },
+          (error, result) => {
+            if (error) return reject(error);
+            resolve(result);
+          }
+        );
+        streamifier.createReadStream(buffer).pipe(stream);
+      });
+    };
 
-    for (const image of imageFiles) {
-      const uploadResponse = await cloudinary.uploader.upload(
-        image.tempFilePath,
-        {
-          folder: "project_images",
-        }
-      );
-      uploadedUrls.push(uploadResponse.secure_url);
-    }
+    const uploadedImages = await Promise.all(
+      imageFiles.map((image) => uploadImageToCloudinary(image.data))
+    );
+
+    const imageData = uploadedImages.map((result) => ({
+      url: result.secure_url,
+      public_id: result.public_id,
+    }));
 
     const updatedProject = await Projects.findByIdAndUpdate(
       projectId,
-      { $push: { images: { $each: uploadedUrls } } },
+      { $push: { images: { $each: imageData } } },
       { new: true }
     );
 
@@ -221,26 +306,24 @@ exports.addProjectVideo = async (req, res) => {
   try {
     const projectId = req.params.id;
 
-    if (!projectId) {
-      return res.status(400).json({ message: "Project Id is required" });
-    }
-
     if (!req.files?.video) {
       return res.status(400).json({ message: "No video file uploaded" });
     }
 
     const videoFile = req.files.video;
-    const uploadResponse = await cloudinary.uploader.upload(
-      videoFile.tempFilePath,
-      {
-        resource_type: "video",
-        folder: "project_videos",
-      }
-    );
+    const sizeInMB = videoFile.size / (1024 * 1024);
+    if (sizeInMB > 95) {
+      return res.status(400).json({ message: "Video must be under 95MB" });
+    }
+
+    const uploadRes = await cloudinary.uploader.upload(videoFile.tempFilePath, {
+      resource_type: "video",
+      folder: "project_videos",
+    });
 
     const updatedProject = await Projects.findByIdAndUpdate(
       projectId,
-      { video: uploadResponse.secure_url },
+      { video: { url: uploadRes.secure_url, public_id: uploadRes.public_id } },
       { new: true }
     );
 
@@ -263,20 +346,15 @@ exports.removeProjectVideo = async (req, res) => {
     const { projectId } = req.params;
 
     const project = await Projects.findById(projectId);
-    if (!project) {
-      return res.status(404).json({ message: "Project not found" });
+    if (!project || !project.video?.public_id) {
+      return res.status(404).json({ message: "No video to remove" });
     }
 
-    if (!project.video) {
-      return res.status(400).json({ message: "No video to remove" });
-    }
-
-    const publicId = project.video.split("/").pop().split(".")[0];
-    await cloudinary.uploader.destroy(`project_videos/${publicId}`, {
+    await cloudinary.uploader.destroy(project.video.public_id, {
       resource_type: "video",
     });
 
-    project.video = "";
+    project.video = undefined;
     await project.save();
 
     res.status(200).json({ message: "Video removed successfully" });
@@ -289,10 +367,10 @@ exports.removeProjectVideo = async (req, res) => {
 exports.removeProjectImage = async (req, res) => {
   try {
     const { projectId } = req.params;
-    const { imageUrl } = req.body;
+    const { public_id } = req.body;
 
-    if (!imageUrl) {
-      return res.status(400).json({ message: "Image URL is required" });
+    if (!public_id) {
+      return res.status(400).json({ message: "public_id is required" });
     }
 
     const project = await Projects.findById(projectId);
@@ -300,15 +378,19 @@ exports.removeProjectImage = async (req, res) => {
       return res.status(404).json({ message: "Project not found" });
     }
 
-    project.images = project.images.filter((img) => img !== imageUrl);
+    // Remove image from Cloudinary
+    await cloudinary.uploader.destroy(public_id);
+
+    // Remove from DB
+    project.images = project.images.filter(
+      (img) => img.public_id !== public_id
+    );
     await project.save();
 
-    const publicId = imageUrl.split("/").pop().split(".")[0];
-    await cloudinary.uploader.destroy(`project_images/${publicId}`);
-
-    res
-      .status(200)
-      .json({ message: "Image removed successfully", images: project.images });
+    res.status(200).json({
+      message: "Image removed successfully",
+      images: project.images,
+    });
   } catch (error) {
     console.error("Error in removeProjectImage:", error.message);
     res.status(500).json({ message: "Internal Server Error", error });
@@ -319,13 +401,21 @@ exports.deleteProject = async (req, res) => {
   try {
     const projectId = req.params.id;
 
-    if (!projectId) {
-      return res.status(400).json({ message: "Project ID is required" });
-    }
-
     const project = await Projects.findById(projectId);
     if (!project) {
       return res.status(404).json({ message: "Project not found" });
+    }
+
+    for (const image of project.images || []) {
+      if (image.public_id) {
+        await cloudinary.uploader.destroy(image.public_id);
+      }
+    }
+
+    if (project.video?.public_id) {
+      await cloudinary.uploader.destroy(project.video.public_id, {
+        resource_type: "video",
+      });
     }
 
     await Projects.findByIdAndDelete(projectId);

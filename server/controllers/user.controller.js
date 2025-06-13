@@ -2,6 +2,9 @@ const User = require("../models/user");
 const bcrypt = require("bcrypt");
 const { generateTokens } = require("../lib/utils");
 const cloudinary = require("../lib/cloudinary");
+const Projects = require("../models/projects");
+const Category = require("../models/category");
+const streamifier = require("streamifier"); 
 
 exports.signup = async (req, res) => {
   const { username, name, email, password } = req.body;
@@ -13,12 +16,10 @@ exports.signup = async (req, res) => {
 
     const usernameRegex = /^[a-zA-Z0-9_]+$/;
     if (!usernameRegex.test(username)) {
-      return res
-        .status(400)
-        .json({
-          message:
-            "Username can only contain letters, numbers, and underscores with no spaces.",
-        });
+      return res.status(400).json({
+        message:
+          "Username can only contain letters, numbers, and underscores with no spaces.",
+      });
     }
 
     const existingUsername = await User.findOne({ username });
@@ -60,7 +61,6 @@ exports.signup = async (req, res) => {
       name: newUser.name,
       email: newUser.email,
       profile: newUser.profile,
-      
     });
   } catch (error) {
     console.error("Signup error:", error);
@@ -78,31 +78,28 @@ exports.login = async (req, res) => {
   try {
     const user = await User.findOne({
       $or: [{ email: identifier }, { username: identifier }],
-    }).select('+password googleId'); 
+    }).select("+password googleId");
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    if (user.googleId && !user.password) {
-      return res.status(400).json({
-        message:
-          "This account uses Google sign-in. Please login with Google instead.",
-      });
-    }
-
+    // ❌ If user has googleId but still no password, block password login
     if (!user.password) {
       return res.status(400).json({
-        message: "Password not set for this user. Please reset your password.",
+        message: user.googleId
+          ? "This Google account has no password. Please sign in with Google."
+          : "Password not set for this account.",
       });
     }
 
+    // ✅ Now compare password
     const isMatch = await bcrypt.compare(password, user.password);
-
     if (!isMatch) {
       return res.status(401).json({ message: "Invalid credentials" });
     }
 
+    // ✅ Generate tokens and respond
     generateTokens(user._id, res);
 
     res.status(200).json({
@@ -130,7 +127,6 @@ exports.logout = async (req, res) => {
 exports.updateUserData = async (req, res) => {
   try {
     const userId = req.user._id;
-
     const { name, email, username } = req.body;
 
     if (!name && !email && !username) {
@@ -140,24 +136,23 @@ exports.updateUserData = async (req, res) => {
     const updatedFields = {};
 
     if (username) {
-      const usernameRegex = /^[a-zA-Z0-9_]+$/;
+      const usernameRegex = /^[a-zA-Z0-9._]+$/;
       if (!usernameRegex.test(username)) {
-        return res
-          .status(400)
-          .json({
-            message:
-              "Username can only contain letters, numbers, and underscores with no spaces.",
-          });
+        return res.status(400).json({
+          message:
+            "Username can only contain letters, numbers, and underscores with no spaces.",
+        });
       }
       updatedFields.username = username;
     }
+
     if (name) updatedFields.name = name;
     if (email) updatedFields.email = email;
 
     const updatedUser = await User.findByIdAndUpdate(
       userId,
       { $set: updatedFields },
-      { new: true, runValidators: true }
+      { new: true, runValidators: true, context: "query" }
     );
 
     if (!updatedUser) {
@@ -168,9 +163,21 @@ exports.updateUserData = async (req, res) => {
       message: "User data updated successfully",
       user: updatedUser,
     });
-    
   } catch (error) {
     console.error("Error in updateUserData:", error.message);
+
+    if (error.code === 11000) {
+      const duplicateField = Object.keys(error.keyValue)[0];
+      return res.status(409).json({
+        message: `The ${duplicateField} "${error.keyValue[duplicateField]}" is already taken.`,
+      });
+    }
+
+    if (error.name === "ValidationError") {
+      const messages = Object.values(error.errors).map((err) => err.message);
+      return res.status(400).json({ message: messages.join(" ") });
+    }
+
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
@@ -185,13 +192,30 @@ exports.updateProfile = async (req, res) => {
 
     const file = req.files.profilePic;
 
-    const uploadResponse = await cloudinary.uploader.upload(file.tempFilePath, {
-      folder: "profiles",
-    });
+    // Create upload stream
+    const streamUpload = (buffer) => {
+      return new Promise((resolve, reject) => {
+        const stream = cloudinary.uploader.upload_stream(
+          {
+            folder: "profiles",
+            resource_type: "auto", // for image/video support
+          },
+          (error, result) => {
+            if (result) resolve(result);
+            else reject(error);
+          }
+        );
+        streamifier.createReadStream(buffer).pipe(stream);
+      });
+    };
 
+    // Upload using buffer
+    const result = await streamUpload(file.data);
+
+    // Save to DB
     const updatedUser = await User.findByIdAndUpdate(
       userId,
-      { profile: uploadResponse.secure_url },
+      { profile: result.secure_url },
       { new: true }
     );
 
@@ -199,14 +223,184 @@ exports.updateProfile = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    console.log("Updated user:", updatedUser.username);
-
     res.status(200).json({
       message: "Profile picture updated successfully",
-      profileImage: uploadResponse.secure_url,
+      profileImage: result.secure_url,
     });
   } catch (error) {
-    console.error("Error in updateProfile:", error.message);
+    console.error("Error in updateProfile:", error);
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
+
+// 🔥 Make sure to install this via `npm i streamifier`
+
+exports.updateInfo = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const user = await User.findById(userId);
+
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    const updateData = {
+      bio: req.body.bio,
+      location: req.body.location,
+      phone: req.body.phone,
+      website: req.body.website,
+
+      linkedin: req.body.linkedin,
+      github: req.body.github,
+      twitter: req.body.twitter,
+      portfolio: req.body.portfolio,
+      dribbble: req.body.dribbble,
+      behance: req.body.behance,
+      youtube: req.body.youtube,
+
+      isAvailableForWork: req.body.isAvailableForWork === "true",
+    };
+
+    // 🎯 Parse skills (array / comma / JSON string)
+    if (req.body.skills) {
+      updateData.skills = Array.isArray(req.body.skills)
+        ? req.body.skills
+        : req.body.skills.includes("[")
+        ? JSON.parse(req.body.skills)
+        : req.body.skills.split(",").map((s) => s.trim());
+    }
+
+    // 🗑️ Delete resume if requested
+    if (req.body.deleteResume === "true" && user.resume?.public_id) {
+      await cloudinary.uploader.destroy(user.resume.public_id, {
+        resource_type: "raw",
+      });
+      updateData.resume = undefined;
+    }
+
+    // 📤 Upload new resume
+    if (req.files?.resume) {
+      const resumeFile = req.files.resume;
+
+      if (resumeFile.mimetype !== "application/pdf") {
+        return res.status(400).json({ message: "Resume must be a PDF file" });
+      }
+
+      // Delete old resume if exists
+      if (user.resume?.public_id) {
+        await cloudinary.uploader.destroy(user.resume.public_id, {
+          resource_type: "raw",
+        });
+      }
+
+      // 🧼 Clean filename
+      const cleanFileName = resumeFile.name
+        .replace(/\s+/g, "_")
+        .replace(/[()]/g, "")
+        .replace(/\.pdf$/i, "");
+
+      // 🚀 Upload PDF buffer using stream
+      const uploadResume = (buffer) =>
+        new Promise((resolve, reject) => {
+          const uploadStream = cloudinary.uploader.upload_stream(
+            {
+              folder: "resumes",
+              resource_type: "raw",
+              public_id: `${userId}_${cleanFileName}`,
+              overwrite: true,
+            },
+            (error, result) => {
+              if (result) resolve(result);
+              else reject(error);
+            }
+          );
+          streamifier.createReadStream(buffer).pipe(uploadStream);
+        });
+
+      const uploaded = await uploadResume(resumeFile.data);
+
+      updateData.resume = {
+        url: uploaded.secure_url,
+        public_id: uploaded.public_id,
+      };
+    }
+
+    // 🔄 Final DB update
+    const updatedUser = await User.findByIdAndUpdate(userId, updateData, {
+      new: true,
+    });
+
+    res.status(200).json({
+      message: "Profile updated successfully",
+      user: updatedUser,
+    });
+  } catch (error) {
+    console.error("Update profile error:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+
+exports.deleteUser = async (req, res) => {
+  try {
+    const userId = req.user._id;
+
+    const user = await User.findById(userId);
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    // 🧹 Delete user profile picture from Cloudinary if hosted there
+    if (user.profile?.includes("res.cloudinary.com")) {
+      const profileUrlParts = user.profile.split("/");
+      const fileNameWithExt = profileUrlParts.pop();
+      const publicId = fileNameWithExt.split(".")[0];
+      await cloudinary.uploader.destroy(`profiles/${publicId}`); // 🔁 fixed folder path
+    }
+
+    // 📂 Find all projects by user
+    const projects = await Projects.find({ user: userId });
+
+    for (const project of projects) {
+      // 🖼️ Delete all images from Cloudinary
+      for (const image of project.images || []) {
+        if (image.public_id) {
+          await cloudinary.uploader.destroy(image.public_id);
+        }
+      }
+
+      // 📽️ Delete video if present
+      if (project.video?.public_id) {
+        await cloudinary.uploader.destroy(project.video.public_id, {
+          resource_type: "video",
+        });
+      }
+
+      // 📄 Delete PDF if present
+      if (project.pdf?.public_id) {
+        await cloudinary.uploader.destroy(project.pdf.public_id, {
+          resource_type: "raw",
+        });
+      }
+
+      // 🧼 Remove project reference from category
+      if (project.categoryId) {
+        await Category.findByIdAndUpdate(project.categoryId, {
+          $pull: { projectsId: project._id },
+        });
+      }
+
+      // ❌ Delete project document
+      await Projects.findByIdAndDelete(project._id);
+    }
+
+    // ❌ Delete all categories belonging to user
+    await Category.deleteMany({ user: userId });
+
+    // ❌ Finally delete user
+    await User.findByIdAndDelete(userId);
+
+    // 🍪 Clear token and respond
+    res.clearCookie("token").json({ message: "Account deleted successfully" });
+  } catch (error) {
+    console.error("Error in deleteUser:", error.message);
+    res.status(500).json({ message: "Internal Server Error", error });
+  }
+};
+

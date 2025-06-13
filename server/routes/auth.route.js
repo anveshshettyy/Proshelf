@@ -2,9 +2,12 @@ const express = require('express');
 const jwt = require('jsonwebtoken');
 const passport = require('passport');
 const router = express.Router();
-const { signup, login, logout, updateProfile, updateUserData } = require('../controllers/user.controller');
+const { signup, login, logout, updateProfile, updateUserData, updateInfo, getMe, deleteUser } = require('../controllers/user.controller');
 const { protectRoute } = require('../middleware/isLoggedIn');
 const User = require('../models/user');
+const bcrypt = require("bcrypt");
+
+
 
 router.get('/google', passport.authenticate('google', {
   scope: ['profile', 'email']
@@ -28,8 +31,27 @@ router.get('/google/callback',
 
 
 router.get('/me', protectRoute, async (req, res) => {
-  const user = await User.findById(req.user._id).select("-password"); 
-  res.json({ user });
+  try {
+    const user = await User.findById(req.user._id).select('+password'); // select password for checking
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Convert to plain object to safely add custom fields
+    const userObj = user.toObject();
+
+    // Remove password from response for safety
+    delete userObj.password;
+
+    // Add hasPassword flag based on whether password exists
+    userObj.hasPassword = !!user.password;
+
+    res.json({ user: userObj });
+  } catch (err) {
+    console.error("Error in /me:", err);
+    res.status(500).json({ message: "Server error" });
+  }
 });
 
 
@@ -39,8 +61,47 @@ router.post('/login', login);
 
 router.post('/logout', logout);
 
+
 router.put('/update-user', protectRoute, updateUserData);
     
 router.post('/update-profile',protectRoute, updateProfile);
+
+router.put('/update-info', protectRoute, updateInfo);
+
+router.post('/change-password', protectRoute, async (req, res) => {
+  const { oldPassword, newPassword } = req.body;
+  const user = await User.findById(req.user._id).select('+password');
+
+  const isMatch = await bcrypt.compare(oldPassword, user.password);
+  if (!isMatch) {
+    return res.status(400).json({ message: 'Old password is incorrect' });
+  }
+
+  const hashedPassword = await bcrypt.hash(newPassword, 12);
+  user.password = hashedPassword;
+  await user.save();
+
+  res.json({ message: 'Password changed successfully' });
+});
+
+
+
+router.post('/create-password', protectRoute, async (req, res) => {
+  const { newPassword } = req.body;
+  const user = await User.findById(req.user._id);
+
+  if (user.password) {
+    return res.status(400).json({ message: 'You already have a password' });
+  }
+
+  const hashedPassword = await bcrypt.hash(newPassword, 12);
+  user.password = hashedPassword;
+  await user.save();
+
+  res.json({ message: 'Password created successfully' });
+});
+
+
+router.delete('/delete', protectRoute, deleteUser);
 
 module.exports = router;

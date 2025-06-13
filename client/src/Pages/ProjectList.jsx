@@ -3,8 +3,8 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import { ChevronRight } from 'lucide-react';
 import axios from 'axios';
 import Navbar from "../Components/Navbar";
-import CreateProjectDrawer from '../Components/CreateProjectDrawer';
-import EditProjectDrawer from '../Components/EditProjectDrawer';
+import CreateProjectDrawer from '../Components/Project/CreateProjectDrawer';
+import EditProjectDrawer from '../Components/Project/EditProjectDrawer';
 import CreateIcon from '../assets/Images/add.png';
 import CreateIconB from '../assets/Images/addB.png';
 import DeleteIcon from '../assets/Images/delete.png';
@@ -32,6 +32,7 @@ export default function ProjectList() {
     const [editDescription, setEditDescription] = useState('');
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
+    const [about, setAbout] = useState('');
     const [source, setSource] = useState('');
     const [liveDemo, setLiveDemo] = useState('');
     const [technologies, setTechnologies] = useState('');
@@ -68,6 +69,7 @@ export default function ProjectList() {
             const formData = new FormData();
             formData.append('title', createTitle);
             formData.append('description', createDescription);
+            formData.append('about', about);
             formData.append('source', source);
             formData.append('liveDemo', liveDemo);
             formData.append('technologies', technologies);
@@ -96,6 +98,7 @@ export default function ProjectList() {
             setProjects((prev) => [...prev, res.data.project]);
             setCreateTitle('');
             setCreateDescription('');
+            setAbout('');
             setSource('');
             setLiveDemo('');
             setTechnologies('');
@@ -163,11 +166,11 @@ export default function ProjectList() {
         <div>
             <Navbar />
             <div className="flex items-center gap-x-3 font-med text-gray-700 md:px-15 px-3">
-                <Link to="/collections" className="">
+                <Link to="/collections" className="hover:underline">
                     Collections
                 </Link>
                 <ChevronRight className="w-4 h-4" />
-                <h1 className=" font-semibold text-black">Projects</h1>
+                <h1 className=" font-semibold text-black ">Projects</h1>
             </div>
 
             <div className="p-3 md:p-15 md:flex md:justify-between md:items-center">
@@ -216,7 +219,7 @@ export default function ProjectList() {
             </div>
 
             <div className="flex mt-5 md:mt-0 min-h-[90vh]">
-                <div className="w-1/3 bg-yellow-500 h-[100vh] hidden md:block"></div>
+                {/* <div className="w-1/3 bg-yellow-500 h-[100vh] hidden md:block"></div> */}
 
                 <div className="w-full">
                     {isUploading && (
@@ -241,6 +244,7 @@ export default function ProjectList() {
                                     setTitle={setCreateTitle}
                                     description={createDescription}
                                     setDescription={setCreateDescription}
+                                    about={about} setAbout={setAbout}
                                     source={source} setSource={setSource}
                                     liveDemo={liveDemo} setLiveDemo={setLiveDemo}
                                     technologies={technologies} setTechnologies={setTechnologies}
@@ -273,7 +277,7 @@ export default function ProjectList() {
                                             />
                                         </div>
                                     ) : (
-                                        <div className="group p-3 md:px-10 md:py-5 bg-slate-200 rounded-2xl flex items-center gap-x-5 cursor-default">
+                                        <div className="group p-3 md:px-10 md:py-5 bg-slate-200 hover:shadow-lg transition duration-500 rounded-2xl flex items-center gap-x-5 cursor-default">
                                             <div className="relative h-10 w-10">
                                                 <img
                                                     className="absolute inset-0 h-full w-full object-contain"

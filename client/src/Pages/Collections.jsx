@@ -3,8 +3,8 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../Components/Navbar';
-import CreateCollectionDrawer from '../Components/CreateCollectionDrawer';
-import EditCollectionDrawer from '../Components/EditCollectionDrawer';
+import CreateCollectionDrawer from '../Components/Collection/CreateCollectionDrawer';
+import EditCollectionDrawer from '../Components/Collection/EditCollectionDrawer';
 import CreateIcon from '../assets/Images/add.png';
 import CreateIconB from '../assets/Images/addB.png';
 import DeleteIcon from '../assets/Images/delete.png';
@@ -151,7 +151,7 @@ export default function Collections() {
       </div>
 
       <div className='flex mt-5 md:mt-0'>
-        <div className='w-1/3 bg-yellow-500 h-[100vh] hidden md:block'></div>
+        {/* <div className='w-1/3 bg-yellow-500 h-[100vh] hidden md:block'></div> */}
         <div className='w-full'>
           {showDrawer && (
             <div className='w-full flex justify-center pb-10'>
@@ -186,7 +186,7 @@ export default function Collections() {
                     </div>
                   ) : (
                     <div
-                      className='group p-3 md:px-10 md:py-5 bg-slate-200 rounded-2xl flex items-center gap-x-5 '>
+                      className='group p-3 md:px-10 md:py-5 bg-slate-200 hover:shadow-lg transition duration-500 rounded-2xl flex items-center gap-x-5 '>
                       <div className='relative h-10 w-10'>
                         <img
                           className='absolute inset-0 h-full w-full object-contain opacity-100 transition duration-200'
