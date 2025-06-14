@@ -351,7 +351,7 @@ exports.deleteUser = async (req, res) => {
       const profileUrlParts = user.profile.split("/");
       const fileNameWithExt = profileUrlParts.pop();
       const publicId = fileNameWithExt.split(".")[0];
-      await cloudinary.uploader.destroy(`profiles/${publicId}`); // 🔁 fixed folder path
+      await cloudinary.uploader.destroy(`profiles/${publicId}`);
     }
 
     // 📂 Find all projects by user
@@ -396,11 +396,18 @@ exports.deleteUser = async (req, res) => {
     // ❌ Finally delete user
     await User.findByIdAndDelete(userId);
 
-    // 🍪 Clear token and respond
-    res.clearCookie("token").json({ message: "Account deleted successfully" });
+    // 🧹 Clear JWT cookie and respond
+    res.clearCookie("jwt", {
+      httpOnly: true,
+      sameSite: "Lax",
+      secure: process.env.NODE_ENV === "production",
+    });
+
+    res.status(200).json({ message: "Account deleted successfully" });
   } catch (error) {
     console.error("Error in deleteUser:", error.message);
     res.status(500).json({ message: "Internal Server Error", error });
   }
 };
+
 
