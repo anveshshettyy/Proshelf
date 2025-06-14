@@ -1,34 +1,39 @@
 const Category = require('../models/category');
 const User = require('../models/user');
 
-exports.createCategory = async(req, res) => {
-    const { title, description } = req.body;
-    const userId = req.params.id;
+exports.createCategory = async (req, res) => {
+  console.log("➡️ Hit createCategory API");
 
-    if(!title) {
-        return res.json(400).json({messsage : "Title is required"});
-    }
+  const { title, description } = req.body;
+  const userId = req.params.id;
 
-    try {
-        const newCategory = new Category({
-        title,
-        description,
-        userId,
+  if (!title) {
+    return res.status(400).json({ message: "Title is required" });
+  }
+
+  try {
+    const newCategory = new Category({
+      title,
+      description,
+      userId,
     });
 
     const saveCategory = await newCategory.save();
 
     await User.findByIdAndUpdate(
-        userId,
-        { $push: { categoryId: saveCategory._id } },
-        { new: true }
+      userId,
+      { $push: { categoryId: saveCategory._id } },
+      { new: true }
     );
 
+    console.log("✅ Category saved:", saveCategory);
     res.status(201).json(saveCategory);
-    } catch(error) {
-        res.status(500).json({ message: "Server Error", error });
-    }
+  } catch (error) {
+    console.error("❌ Error while saving category:", error); // Always log error
+    res.status(500).json({ message: "Server Error", error: error.message });
+  }
 };
+
 
 exports.category = async (req, res) => {
   try {
