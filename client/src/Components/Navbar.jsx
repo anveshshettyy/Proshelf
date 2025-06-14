@@ -55,6 +55,7 @@ export default function Navbar() {
         <img
           src={user?.profile || '/default-profile.png'} // fallback image
           alt="Profile"
+          referrerPolicy="no-referrer"
           className="w-8 h-8 rounded-full object-cover cursor-pointer hover:ring-2 ring-slate-400 transition-all"
           onClick={() => setProfileDropdown((prev) => !prev)}
         />

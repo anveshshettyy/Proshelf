@@ -2,7 +2,7 @@ const express = require('express');
 const jwt = require('jsonwebtoken');
 const passport = require('passport');
 const router = express.Router();
-const { signup, login, logout, updateProfile, updateUserData, updateInfo, getMe, deleteUser } = require('../controllers/user.controller');
+const { signup, login, logout, updateProfile, updateUserData, updateInfo, getMe, deleteUser, getData } = require('../controllers/user.controller');
 const { protectRoute } = require('../middleware/isLoggedIn');
 const User = require('../models/user');
 const bcrypt = require("bcrypt");
@@ -53,6 +53,8 @@ router.get('/me', protectRoute, async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 });
+
+router.get('/:username', getData);
 
 
 router.post('/signup', signup);

@@ -124,6 +124,33 @@ exports.logout = async (req, res) => {
   }
 };
 
+exports.getData = async (req, res) => {
+  try {
+    const user = await User.findOne({ username: req.params.username })
+      .populate({
+        path: "categoryId", // or categoryId based on your User model
+        populate: {
+          path: "projectsId",
+          model: "projects",
+        },
+      });
+
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    // Pie chart data preparation
+    const pieChartData = user.categoryId.map((cat) => ({
+      id: cat.title,
+      label: cat.title,
+      value: cat.projectsId.length,
+    }));
+
+    res.json({ user, pieChartData });
+  } catch (err) {
+    console.error("❌ Error fetching user by username:", err.message);
+    res.status(500).json({ message: "Server Error" });
+  }
+};
+
 exports.updateUserData = async (req, res) => {
   try {
     const userId = req.user._id;
@@ -233,8 +260,6 @@ exports.updateProfile = async (req, res) => {
   }
 };
 
-// 🔥 Make sure to install this via `npm i streamifier`
-
 exports.updateInfo = async (req, res) => {
   try {
     const userId = req.user._id;
@@ -271,7 +296,7 @@ exports.updateInfo = async (req, res) => {
     // 🗑️ Delete resume if requested
     if (req.body.deleteResume === "true" && user.resume?.public_id) {
       await cloudinary.uploader.destroy(user.resume.public_id, {
-        resource_type: "raw",
+        
       });
       updateData.resume = undefined;
     }
@@ -287,7 +312,7 @@ exports.updateInfo = async (req, res) => {
       // Delete old resume if exists
       if (user.resume?.public_id) {
         await cloudinary.uploader.destroy(user.resume.public_id, {
-          resource_type: "raw",
+          
         });
       }
 
@@ -303,7 +328,7 @@ exports.updateInfo = async (req, res) => {
           const uploadStream = cloudinary.uploader.upload_stream(
             {
               folder: "resumes",
-              resource_type: "raw",
+              
               public_id: `${userId}_${cleanFileName}`,
               overwrite: true,
             },
@@ -375,7 +400,7 @@ exports.deleteUser = async (req, res) => {
       // 📄 Delete PDF if present
       if (project.pdf?.public_id) {
         await cloudinary.uploader.destroy(project.pdf.public_id, {
-          resource_type: "raw",
+          
         });
       }
 

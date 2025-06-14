@@ -82,9 +82,9 @@ export default function UserOverview({ user, setUser, setAlert }) {
         )}
         <div className="h-32 w-32 rounded-full bg-gray-200 overflow-hidden flex items-center justify-center relative">
           {profilePreview ? (
-            <img src={profilePreview} alt="preview" className="h-full w-full object-cover" />
+            <img referrerPolicy="no-referrer" src={profilePreview} alt="preview" className="h-full w-full object-cover" />
           ) : user.profile ? (
-            <img src={user.profile} alt="profile" className="h-full w-full object-cover" />
+            <img referrerPolicy="no-referrer" src={user.profile} alt="profile" className="h-full w-full object-cover" />
           ) : (
             <User2 className="text-slate-400 w-12 h-12" />
           )}

@@ -11,7 +11,7 @@ const categorySchema = new mongoose.Schema({
   projectsId: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Projects"
+      ref: "Projects" 
     }
   ]
 });

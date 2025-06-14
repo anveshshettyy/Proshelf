@@ -111,6 +111,9 @@ export default function Collections() {
     setShowDrawer((prev) => !prev);
   };
 
+
+
+
   return (
     <div>
       <Navbar />
@@ -120,8 +123,8 @@ export default function Collections() {
         <div className='flex justify-around font-med gap-3 text-gray-500 mt-5 text-sm md:text-[2.3vh]'>
           <div
             className={`group border-2 rounded-2xl p-2 flex cursor-pointer items-center gap-2 transition duration-200 ${showDrawer
-                ? 'border-black text-black shadow-lg'
-                : 'border-gray-500 hover:border-black hover:text-black hover:shadow-lg'
+              ? 'border-black text-black shadow-lg'
+              : 'border-gray-500 hover:border-black hover:text-black hover:shadow-lg'
               }`}
             onClick={toggleDrawer}
           >
@@ -178,79 +181,91 @@ export default function Collections() {
             </div>
           )}
 
-          <div className='flex flex-col items-center justify-center md:gap-5 gap-2'>
-            {collections.map((collection) => {
-              const isEditing = editingCollection && editingCollection._id === collection._id;
-              return (
-                <div key={collection._id} className='w-[90%]'>
-                  {isEditing ? (
-                    <div className=' mb-8 md:mb-2 animate-drawerSlideDown'>
-                      <EditCollectionDrawer
-                        onClose={() => setEditingCollection(null)}
-                        onSubmit={handleUpdate}
-                        title={editTitle}
-                        setTitle={setEditTitle}
-                        description={editDescription}
-                        setDescription={setEditDescription}
-                      />
-                    </div>
-                  ) : (
-                    <div
-                      className='group p-3 md:px-10 md:py-5 bg-slate-200 hover:shadow-lg transition duration-500 rounded-2xl flex items-center gap-x-5 '>
-                      <div className='relative h-10 w-10'>
-                        <img
-                          className='absolute inset-0 h-full w-full object-contain opacity-100 transition duration-200'
-                          src={FolderIcon}
-                          alt='Folder'
+          <div className='flex flex-col items-center justify-center md:gap-5 pb-10 gap-2'>
+            {collections.length === 0 ? (
+              <div className="text-center mt-10 text-slate-500">
+                <p className="text-lg mb-4">No collections found. Create one!</p>
+                <button
+                  onClick={toggleDrawer}
+                  className="bg-black cursor-pointer text-white px-4 py-2 rounded-lg hover:bg-gray-800 transition"
+                >
+                  + Create Collection
+                </button>
+              </div>
+            ) : (
+              collections.map((collection) => {
+                const isEditing = editingCollection && editingCollection._id === collection._id;
+                return (
+                  <div key={collection._id} className='w-[90%]'>
+                    {isEditing ? (
+                      <div className=' mb-8 md:mb-2 animate-drawerSlideDown'>
+                        <EditCollectionDrawer
+                          onClose={() => setEditingCollection(null)}
+                          onSubmit={handleUpdate}
+                          title={editTitle}
+                          setTitle={setEditTitle}
+                          description={editDescription}
+                          setDescription={setEditDescription}
                         />
                       </div>
-
-                      <div className='flex flex-col md:flex-row w-full md:items-center items-start justify-between'>
-                        <div
-                          onClick={() => navigate(`/projects/${collection._id}`)}
-                          className='mb-2 md:mb-0 cursor-pointer'>
-                          <h1 className='font-head'>{collection.title}</h1>
-                          <h1 className='font-med font-thin text-sm'>
-                            {collection.description}
-                          </h1>
+                    ) : (
+                      <div className='group p-3 md:px-10 md:py-5 bg-slate-200  transition duration-500 rounded-2xl flex items-center gap-x-5'>
+                        <div className='relative h-10 w-10'>
+                          <img
+                            className='absolute inset-0 h-full w-full object-contain opacity-100 transition duration-200'
+                            src={FolderIcon}
+                            alt='Folder'
+                          />
                         </div>
 
-                        <div className='flex gap-5 items-center text-sm font-helvetica'>
+                        <div className='flex flex-col md:flex-row w-full md:items-center items-start justify-between'>
                           <div
-                            className='flex gap-1 items-center cursor-pointer'
-                            onClick={() => handleEditClick(collection)}
-                          >
-                            <div className='relative h-4 w-4 md:h-5 md:w-5'>
-                              <img
-                                className='absolute inset-0 h-full w-full object-contain opacity-100 transition duration-200'
-                                src={EditIcon}
-                                alt='Edit'
-                              />
-                            </div>
-                            <h1>Edit</h1>
+                            onClick={() => navigate(`/projects/${collection._id}`)}
+                            className='mb-2 md:mb-0 cursor-pointer'>
+                            <h1 className='font-head'>{collection.title}</h1>
+                            <h1 className='font-med font-thin text-sm'>
+                              {collection.description}
+                            </h1>
                           </div>
 
-                          <div
-                            className='flex gap-1 items-center cursor-pointer'
-                            onClick={() => requestDelete(collection._id)}
-                          >
-                            <div className='relative h-4 w-4 md:h-5 md:w-5'>
-                              <img
-                                className='absolute inset-0 h-full w-full object-contain opacity-100 transition duration-200'
-                                src={DeleteIconB}
-                                alt='Delete'
-                              />
+                          <div className='flex gap-5 items-center text-sm font-helvetica'>
+                            <div
+                              className='flex gap-1 items-center cursor-pointer'
+                              onClick={() => handleEditClick(collection)}
+                            >
+                              <div className='relative h-4 w-4 md:h-5 md:w-5'>
+                                <img
+                                  className='absolute inset-0 h-full w-full object-contain opacity-100 transition duration-200'
+                                  src={EditIcon}
+                                  alt='Edit'
+                                />
+                              </div>
+                              <h1>Edit</h1>
                             </div>
-                            <h1>Delete</h1>
+
+                            <div
+                              className='flex gap-1 items-center cursor-pointer'
+                              onClick={() => requestDelete(collection._id)}
+                            >
+                              <div className='relative h-4 w-4 md:h-5 md:w-5'>
+                                <img
+                                  className='absolute inset-0 h-full w-full object-contain opacity-100 transition duration-200'
+                                  src={DeleteIconB}
+                                  alt='Delete'
+                                />
+                              </div>
+                              <h1>Delete</h1>
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                  )}
-                </div>
-              );
-            })}
+                    )}
+                  </div>
+                );
+              })
+            )}
           </div>
+
         </div>
       </div>
       <ConfirmPopup

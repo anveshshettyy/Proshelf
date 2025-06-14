@@ -9,6 +9,7 @@ import SignUp from './Pages/SignUp'
 import ProfileDashboard from './Pages/ProfileDashboard'
 import Project from './Pages/Project'
 import ProjectList from './Pages/ProjectList'
+import Profile from './Pages/User/Profile'
 
 
 export default function App() {
@@ -18,10 +19,11 @@ export default function App() {
         <Route path='/' element={<Home />} />
         <Route path='/login' element={<Login />} />
         <Route path='/signup' element={<SignUp />} />
-        <Route path='/profile' element={<ProfileDashboard />} />
+        <Route path='/profile' element={<ProtectedRoute><ProfileDashboard /></ProtectedRoute>} />
         <Route path='/collections' element={<ProtectedRoute><Collections /></ProtectedRoute>} />
         <Route path='/projects/:id' element={<ProtectedRoute> <ProjectList /></ProtectedRoute>} />
         <Route path='/project/:id' element={<ProtectedRoute> <Project /></ProtectedRoute>} />
+        <Route path='/:username' element={<Profile />} />
       </Routes>
     </SmoothScrollWrapper>
   )

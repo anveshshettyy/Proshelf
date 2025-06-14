@@ -28,8 +28,6 @@ export default function ProjectList() {
     const [editingProject, setEditingProject] = useState(null);
     const [editTitle, setEditTitle] = useState('');
     const [editDescription, setEditDescription] = useState('');
-    const [title, setTitle] = useState('');
-    const [description, setDescription] = useState('');
     const [about, setAbout] = useState('');
     const [source, setSource] = useState('');
     const [liveDemo, setLiveDemo] = useState('');
@@ -50,7 +48,7 @@ export default function ProjectList() {
 
     const cancelPopup = () => {
         setShowPopup(false);
-        setOnConfirmCallback(() => () => {});
+        setOnConfirmCallback(() => () => { });
     };
 
     const handleDelete = async (projectId) => {
@@ -87,9 +85,19 @@ export default function ProjectList() {
         fetchCategoryAndProjects();
     }, [id]);
 
+    useEffect(() => {
+        if (alert.show) {
+            const timer = setTimeout(() => {
+                setAlert(prev => ({ ...prev, show: false }));
+            }, 3000);
+
+            return () => clearTimeout(timer); 
+        }
+    }, [alert.show]);
+
     const handleCreate = async () => {
-        setIsUploading(true); // Show loader
-        setShowCreateDrawer(false); // Hide form
+        setIsUploading(true); 
+        setShowCreateDrawer(false); 
 
         try {
             const formData = new FormData();
@@ -100,13 +108,11 @@ export default function ProjectList() {
             formData.append('liveDemo', liveDemo);
             formData.append('technologies', technologies);
 
-            // Append images (if any)
             if (images && images.length > 0) {
                 for (let i = 0; i < images.length; i++) {
                     formData.append('images', images[i]);
                 }
             }
-            // Append video (if any)
             if (video) {
                 formData.append('video', video);
             }
@@ -144,7 +150,7 @@ export default function ProjectList() {
             });
             console.error("Error creating project:", error);
         } finally {
-            setIsUploading(false); // Hide loader
+            setIsUploading(false); 
         }
     };
 
@@ -165,7 +171,7 @@ export default function ProjectList() {
             );
 
             setProjects((prev) =>
-                prev.map((p) => (p._id === res.data.project._id ? res.data.project : p)) // ✅ correct ref
+                prev.map((p) => (p._id === res.data.project._id ? res.data.project : p))
             );
 
             setEditingProject(null);
@@ -235,7 +241,7 @@ export default function ProjectList() {
             <div className="flex mt-5 md:mt-0 min-h-[90vh]">
                 {/* <div className="w-1/3 bg-yellow-500 h-[100vh] hidden md:block"></div> */}
 
-                <div className="w-full">
+                <div className="w-full px-15">
                     {isUploading && (
                         <div className="w-full flex justify-center items-center py-3">
                             <div className="flex items-center gap-2">
@@ -269,16 +275,24 @@ export default function ProjectList() {
                         </div>
                     )}
 
-                    <div className="flex flex-col items-center justify-center md:gap-5 gap-4">
+                    <div className="flex flex-col items-center justify-center md:gap-5 gap-4 rounded-2xl bg-gray-100 p-10">
                         {projects.length === 0 && (
-                            <p className="text-gray-500">No projects found in this category.</p>
+                            <div className="text-center mt-10 text-slate-500">
+                                <p className="text-lg mb-4">No projects found. Create one!</p>
+                                <button
+                                    onClick={() => setShowCreateDrawer(prev => !prev)}
+                                    className="bg-black cursor-pointer text-white px-4 py-2 rounded-lg hover:bg-gray-800 transition"
+                                >
+                                    + Create Project
+                                </button>
+                            </div>
                         )}
 
                         {projects.map((project) => {
                             const isEditing = editingProject && editingProject._id === project._id;
 
                             return (
-                                <div key={project._id} className="w-[90%] md:w-full max-w-4xl">
+                                <div key={project._id} className="w-[90%] md:w-[90%] ">
                                     {isEditing ? (
                                         <div className="mb-8 md:mb-2 animate-drawerSlideDown">
                                             <EditProjectDrawer
@@ -291,7 +305,7 @@ export default function ProjectList() {
                                             />
                                         </div>
                                     ) : (
-                                        <div className="group p-3 md:px-10 md:py-5 bg-slate-200 hover:shadow-lg transition duration-500 rounded-2xl flex items-center gap-x-5 cursor-default">
+                                        <div className="group p-3 md:px-10 md:py-5 bg-white  transition duration-500 rounded-2xl flex items-center gap-x-5 cursor-default">
                                             <div className="relative h-10 w-10">
                                                 <img
                                                     className="absolute inset-0 h-full w-full object-contain"
