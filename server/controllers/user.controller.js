@@ -4,7 +4,7 @@ const { generateTokens } = require("../lib/utils");
 const cloudinary = require("../lib/cloudinary");
 const Projects = require("../models/projects");
 const Category = require("../models/category");
-const streamifier = require("streamifier"); 
+const streamifier = require("streamifier");
 
 exports.signup = async (req, res) => {
   const { username, name, email, password } = req.body;
@@ -124,20 +124,41 @@ exports.logout = async (req, res) => {
   }
 };
 
+exports.me = async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id).select("+password"); // select password for checking
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const userObj = user.toObject();
+
+    delete userObj.password;
+
+    userObj.hasPassword = !!user.password;
+
+    res.json({ user: userObj });
+  } catch (err) {
+    console.error("Error in /me:", err);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
 exports.getData = async (req, res) => {
   try {
-    const user = await User.findOne({ username: req.params.username })
-      .populate({
-        path: "categoryId", // or categoryId based on your User model
+    const user = await User.findOne({ username: req.params.username }).populate(
+      {
+        path: "categoryId",
         populate: {
           path: "projectsId",
           model: "projects",
         },
-      });
+      }
+    );
 
     if (!user) return res.status(404).json({ message: "User not found" });
 
-    // Pie chart data preparation
     const pieChartData = user.categoryId.map((cat) => ({
       id: cat.title,
       label: cat.title,
@@ -147,6 +168,32 @@ exports.getData = async (req, res) => {
     res.json({ user, pieChartData });
   } catch (err) {
     console.error("❌ Error fetching user by username:", err.message);
+    res.status(500).json({ message: "Server Error" });
+  }
+};
+
+exports.getCollections = async (req, res) => {
+  try {
+    const user = await User.findOne({ username: req.params.username }).populate({
+      path: "categoryId",
+      populate: {
+        path: "projectsId",
+        model: "projects",
+      },
+    });
+
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    const collections = user.categoryId.map((category) => ({
+      _id: category._id,
+      title: category.title,
+      description: category.description,
+      projectCount: category.projectsId.length,
+    }));
+
+    res.json({ user, collections });
+  } catch (err) {
+    console.error("❌ Error fetching collections:", err.message);
     res.status(500).json({ message: "Server Error" });
   }
 };
@@ -295,9 +342,7 @@ exports.updateInfo = async (req, res) => {
 
     // 🗑️ Delete resume if requested
     if (req.body.deleteResume === "true" && user.resume?.public_id) {
-      await cloudinary.uploader.destroy(user.resume.public_id, {
-        
-      });
+      await cloudinary.uploader.destroy(user.resume.public_id, {});
       updateData.resume = undefined;
     }
 
@@ -311,9 +356,7 @@ exports.updateInfo = async (req, res) => {
 
       // Delete old resume if exists
       if (user.resume?.public_id) {
-        await cloudinary.uploader.destroy(user.resume.public_id, {
-          
-        });
+        await cloudinary.uploader.destroy(user.resume.public_id, {});
       }
 
       // 🧼 Clean filename
@@ -328,7 +371,7 @@ exports.updateInfo = async (req, res) => {
           const uploadStream = cloudinary.uploader.upload_stream(
             {
               folder: "resumes",
-              
+
               public_id: `${userId}_${cleanFileName}`,
               overwrite: true,
             },
@@ -362,7 +405,6 @@ exports.updateInfo = async (req, res) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
-
 
 exports.deleteUser = async (req, res) => {
   try {
@@ -399,9 +441,7 @@ exports.deleteUser = async (req, res) => {
 
       // 📄 Delete PDF if present
       if (project.pdf?.public_id) {
-        await cloudinary.uploader.destroy(project.pdf.public_id, {
-          
-        });
+        await cloudinary.uploader.destroy(project.pdf.public_id, {});
       }
 
       // 🧼 Remove project reference from category
@@ -434,5 +474,3 @@ exports.deleteUser = async (req, res) => {
     res.status(500).json({ message: "Internal Server Error", error });
   }
 };
-
-

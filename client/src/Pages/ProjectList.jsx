@@ -241,7 +241,7 @@ export default function ProjectList() {
             <div className="flex mt-5 md:mt-0 min-h-[90vh]">
                 {/* <div className="w-1/3 bg-yellow-500 h-[100vh] hidden md:block"></div> */}
 
-                <div className="w-full px-15">
+                <div className="w-full ">
                     {isUploading && (
                         <div className="w-full flex justify-center items-center py-3">
                             <div className="flex items-center gap-2">
@@ -275,7 +275,7 @@ export default function ProjectList() {
                         </div>
                     )}
 
-                    <div className="flex flex-col items-center justify-center md:gap-5 gap-4 rounded-2xl bg-gray-100 p-10">
+                    <div className="flex flex-col items-center  justify-center md:gap-5 gap-4 rounded-2xl ">
                         {projects.length === 0 && (
                             <div className="text-center mt-10 text-slate-500">
                                 <p className="text-lg mb-4">No projects found. Create one!</p>
@@ -305,7 +305,7 @@ export default function ProjectList() {
                                             />
                                         </div>
                                     ) : (
-                                        <div className="group p-3 md:px-10 md:py-5 bg-white  transition duration-500 rounded-2xl flex items-center gap-x-5 cursor-default">
+                                        <div className="group  md:py-5 bg-slate-200  transition duration-500 rounded-2xl flex items-center gap-x-5 cursor-default p-10">
                                             <div className="relative h-10 w-10">
                                                 <img
                                                     className="absolute inset-0 h-full w-full object-contain"

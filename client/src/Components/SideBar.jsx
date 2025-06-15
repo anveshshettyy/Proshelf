@@ -1,14 +1,15 @@
 import React from 'react';
 import { User, FolderKanban } from 'lucide-react';
-import { Link, useLocation } from 'react-router-dom';
-
-const tabs = [
-  { name: 'User Page', path: '/user', icon: <User className="w-5 h-5" /> },
-  { name: 'Collections', path: '/collections', icon: <FolderKanban className="w-5 h-5" /> },
-];
+import { Link, useLocation, useParams } from 'react-router-dom';
 
 export default function SideBar() {
+  const { username } = useParams(); // grab username from URL
   const location = useLocation();
+
+  const tabs = [
+    { name: 'User Page', path: `/${username}`, icon: <User className="w-5 h-5" /> },
+    { name: 'Collections', path: `/${username}/collections`, icon: <FolderKanban className="w-5 h-5" /> },
+  ];
 
   return (
     <>

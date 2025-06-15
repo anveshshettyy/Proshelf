@@ -2,7 +2,7 @@ const express = require('express');
 const jwt = require('jsonwebtoken');
 const passport = require('passport');
 const router = express.Router();
-const { signup, login, logout, updateProfile, updateUserData, updateInfo, getMe, deleteUser, getData } = require('../controllers/user.controller');
+const { signup, login, logout, updateProfile, updateUserData, updateInfo, getMe, deleteUser, getData, me, getCollections } = require('../controllers/user.controller');
 const { protectRoute } = require('../middleware/isLoggedIn');
 const User = require('../models/user');
 const bcrypt = require("bcrypt");
@@ -30,31 +30,11 @@ router.get('/google/callback',
 );
 
 
-router.get('/me', protectRoute, async (req, res) => {
-  try {
-    const user = await User.findById(req.user._id).select('+password'); // select password for checking
-
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
-    }
-
-    // Convert to plain object to safely add custom fields
-    const userObj = user.toObject();
-
-    // Remove password from response for safety
-    delete userObj.password;
-
-    // Add hasPassword flag based on whether password exists
-    userObj.hasPassword = !!user.password;
-
-    res.json({ user: userObj });
-  } catch (err) {
-    console.error("Error in /me:", err);
-    res.status(500).json({ message: "Server error" });
-  }
-});
+router.get('/me', protectRoute, me);
 
 router.get('/:username', getData);
+
+router.get('/:username/collections', getCollections);
 
 
 router.post('/signup', signup);

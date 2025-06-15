@@ -51,6 +51,18 @@ export default function Collections() {
   }, []);
 
   const handleCreate = async () => {
+    // Optional: You can also validate here before sending request
+    const reservedSlugs = ["collections", "admin", "profile", "settings"];
+    if (!title.trim()) {
+      alert("Title is required");
+      return;
+    }
+
+    if (reservedSlugs.includes(title.trim().toLowerCase())) {
+      alert("This title is reserved. Please choose another.");
+      return;
+    }
+
     try {
       const res = await axios.post(
         `/api/category/create/${user._id}`,
@@ -63,8 +75,15 @@ export default function Collections() {
       setCollections((prev) => [...prev, res.data]);
     } catch (err) {
       console.error('Error creating collection:', err);
+
+      if (err.response?.data?.message) {
+        alert(err.response.data.message); // Show server error message if available
+      } else {
+        alert("Something went wrong while creating category.");
+      }
     }
   };
+
 
   const handleEditClick = (collection) => {
     setEditingCollection(collection);
@@ -73,6 +92,18 @@ export default function Collections() {
   };
 
   const handleUpdate = async () => {
+    const reservedSlugs = ["collections", "admin", "profile", "settings"];
+
+    if (!editTitle.trim()) {
+      alert("New title is required");
+      return;
+    }
+
+    if (reservedSlugs.includes(editTitle.trim().toLowerCase())) {
+      alert("This title is reserved. Please choose another.");
+      return;
+    }
+
     try {
       const res = await axios.put(
         `/api/category/edit/${editingCollection._id}`,
@@ -91,8 +122,15 @@ export default function Collections() {
       setEditingCollection(null);
     } catch (err) {
       console.error('Error updating collection:', err);
+
+      if (err.response?.data?.message) {
+        alert(err.response.data.message); // show server error like "Category not found" or "Title is reserved"
+      } else {
+        alert("Something went wrong while updating the collection.");
+      }
     }
   };
+
 
   const handleDeleteConfirmed = async () => {
     try {

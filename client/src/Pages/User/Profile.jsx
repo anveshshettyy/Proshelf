@@ -3,10 +3,10 @@ import Navbar from '../../Components/Navbar';
 import SideBar from '../../Components/SideBar';
 import { User2, Mail, Phone, MapPin, Globe, Pencil, Linkedin, Github, Briefcase, FileText, Link, Star } from 'lucide-react';
 import { FaYoutube, FaDribbble, FaBehance, FaFigma } from 'react-icons/fa';
-import { RiEditFill } from "react-icons/ri";
 import CollectionPieChart from '../../Components/CollectionPieChart';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
+import Loader from '../../Components/Loader';
 
 export default function Profile() {
     const { username } = useParams();
@@ -30,7 +30,7 @@ export default function Profile() {
         fetchUserProfile();
     }, [username]);
 
-    if (loading) return <p className="text-center">Loading...</p>;
+    if (loading) return <Loader />;
     if (!user) return <div className='h-screen w-full flex justify-center items-center '>
         <h1 className='text-3xl font-head'>Error 404 Page not found</h1>
     </div>

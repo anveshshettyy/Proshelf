@@ -10,6 +10,9 @@ import ProfileDashboard from './Pages/ProfileDashboard'
 import Project from './Pages/Project'
 import ProjectList from './Pages/ProjectList'
 import Profile from './Pages/User/Profile'
+import UserCollections from './Pages/User/UserCollections'
+import UserProjectsList from './Pages/User/UserProjectsList'
+import UserProject from './Pages/User/UserProject'
 
 
 export default function App() {
@@ -23,7 +26,11 @@ export default function App() {
         <Route path='/collections' element={<ProtectedRoute><Collections /></ProtectedRoute>} />
         <Route path='/projects/:id' element={<ProtectedRoute> <ProjectList /></ProtectedRoute>} />
         <Route path='/project/:id' element={<ProtectedRoute> <Project /></ProtectedRoute>} />
+        <Route path='/:username/collections' element={<UserCollections />} />
+        <Route path='/:username/:collectionName/:projectName' element={<UserProject />} />
+        <Route path='/:username/:collectionName' element={<UserProjectsList />} />
         <Route path='/:username' element={<Profile />} />
+
       </Routes>
     </SmoothScrollWrapper>
   )

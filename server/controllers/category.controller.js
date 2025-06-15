@@ -7,9 +7,16 @@ exports.createCategory = async (req, res) => {
   const { title, description } = req.body;
   const userId = req.params.id;
 
+  const reservedSlugs = ["collections", "admin", "profile", "settings"];
+
   if (!title) {
     return res.status(400).json({ message: "Title is required" });
   }
+
+  if (reservedSlugs.includes(title.toLowerCase())) {
+    return res.status(400).json({ message: "This title is reserved. Please choose another." });
+  }
+
 
   try {
     const newCategory = new Category({
@@ -49,9 +56,16 @@ exports.renameCategory = async( req, res ) => {
     const categoryId = req.params.categoryId;
     const { title, description } = req.body;
 
+    const reservedSlugs = ["collections", "admin", "profile", "settings"];
+
     if (!title) {
         return res.status(400).json({ message: "New title is required" });
     }
+
+    if (reservedSlugs.includes(title.toLowerCase())) {
+    return res.status(400).json({ message: "This title is reserved. Please choose another." });
+  }
+
 
     try{
         const updateData = { title };
