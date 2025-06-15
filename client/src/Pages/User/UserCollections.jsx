@@ -69,7 +69,7 @@ export default function UserCollections() {
                         collections.map((collection) => (
                             <div
                                 key={collection._id}
-                                onClick={() => navigate(`/projects/${collection._id}`)}
+                                onClick={() => navigate(`/${username}/${collection.slug}`)}
                                 className='bg-gray-100 w-full flex px-10 py-5 rounded-2xl cursor-pointer items-center justify-between 
                                 transition-all duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-[1.015] 
                                 hover:bg-black hover:text-white hover:shadow-2xl group'

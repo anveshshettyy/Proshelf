@@ -1,7 +1,11 @@
-import React from 'react'
+import Navbar from '../../Components/Navbar';
+import SideBar from '../../Components/SideBar';
 
 export default function UserProjectsList() {
   return (
-    <div>UserProjectsList</div>
+    <div>
+      <Navbar />
+      <SideBar />
+    </div>
   )
 }

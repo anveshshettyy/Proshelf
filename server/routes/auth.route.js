@@ -2,7 +2,7 @@ const express = require('express');
 const jwt = require('jsonwebtoken');
 const passport = require('passport');
 const router = express.Router();
-const { signup, login, logout, updateProfile, updateUserData, updateInfo, getMe, deleteUser, getData, me, getCollections } = require('../controllers/user.controller');
+const { signup, login, logout, updateProfile, updateUserData, updateInfo, getMe, deleteUser, getData, me, getCollections, getProjectsList } = require('../controllers/user.controller');
 const { protectRoute } = require('../middleware/isLoggedIn');
 const User = require('../models/user');
 const bcrypt = require("bcrypt");
@@ -35,6 +35,8 @@ router.get('/me', protectRoute, me);
 router.get('/:username', getData);
 
 router.get('/:username/collections', getCollections);
+
+router.get('/:username/:collectionSlug', getProjectsList);
 
 
 router.post('/signup', signup);
