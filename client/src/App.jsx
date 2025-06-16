@@ -28,7 +28,7 @@ export default function App() {
         <Route path='/project/:id' element={<ProtectedRoute> <Project /></ProtectedRoute>} />
         <Route path='/:username/collections' element={<UserCollections />} />
         <Route path='/:username/:collectionName/:projectName' element={<UserProject />} />
-        <Route path='/:username/:collectionName' element={<UserProjectsList />} />
+        <Route path='/:username/:collectionSlug' element={<UserProjectsList />} />
         <Route path='/:username' element={<Profile />} />
 
       </Routes>

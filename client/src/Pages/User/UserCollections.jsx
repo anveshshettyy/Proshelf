@@ -4,8 +4,9 @@ import SideBar from '../../Components/SideBar';
 import { BsCollection } from "react-icons/bs";
 import { HiArrowUp } from "react-icons/hi2";
 import axios from 'axios';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import Loader from '../../Components/Loader';
+import { ChevronRight } from 'lucide-react';
 
 export default function UserCollections() {
     const { username } = useParams();
@@ -38,10 +39,15 @@ export default function UserCollections() {
             <Navbar />
             <SideBar />
             <div className='w-full py-5 px-5 md:px-20'>
+                <div className='flex items-center gap-x-2 mb-5 font-helvetica' >
+                    <Link className='cursor-pointer hover:underline transition ' to={`/${username}`}>{user?.name}</Link>
+                    <ChevronRight className="w-4 h-4" />
+                    <h1>Collections</h1>
+                </div>
                 <div className=''>
                     <div className='flex justify-between items-center'>
                         <div>
-                            <h1 className='text-3xl font-head'>
+                            <h1 className='text-[5vh] font-head'>
                                 {user?.name?.split(' ')[0]}'s Collections
                             </h1>
                             <h2 className="text-gray-700 font-helvetica text-md mt-1">
