@@ -45,6 +45,10 @@ export default function ProfileDashboard() {
       });
   }, []);
 
+  const dismissAlert = () => {
+    setAlert(null);
+  };
+
   const renderComponent = () => {
     if (loading) return <Loader />;
     if (!userData) return <p className="text-center text-red-500">Failed to load data</p>;
@@ -69,7 +73,7 @@ export default function ProfileDashboard() {
       <Navbar />
 
       {/* Use Custom Alert Component */}
-      {alert && <CustomAlert type={alert.type} message={alert.message} />}
+      {alert && <CustomAlert type={alert.type} message={alert.message} onClose={dismissAlert} />}
 
       <div className="min-h-screen flex">
         {/* Sidebar */}
