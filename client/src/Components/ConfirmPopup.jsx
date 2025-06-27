@@ -10,13 +10,13 @@ export default function ConfirmPopup({ isOpen, message, onConfirm, onCancel }) {
         <div className="flex justify-end gap-4 mt-6">
           <button
             onClick={onCancel}
-            className="px-4 py-2 text-sm font-medium text-gray-600 border border-gray-300 rounded hover:bg-gray-100 transition"
+            className="px-4 py-2 cursor-pointer text-sm font-medium text-gray-600 border border-gray-300 rounded hover:bg-gray-100 transition"
           >
             Cancel
           </button>
           <button
             onClick={onConfirm}
-            className="px-4 py-2 text-sm font-medium text-white bg-black rounded hover:bg-gray-800 transition"
+            className="px-4 py-2 text-sm cursor-pointer font-medium text-white bg-black rounded hover:bg-gray-800 transition"
           >
             Confirm
           </button>

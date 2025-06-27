@@ -107,31 +107,37 @@ export default function Profile() {
                                     )}
                                 </div>
 
-                                <div className='mt-10'>
-                                    <h2 className="font-head text-lg mb-2">Skills</h2>
-                                    {user.skills && user.skills.length > 0 ? (
-                                        <div className="flex flex-wrap gap-2">
-                                            {user.skills.map((skill, idx) => (
-                                                <span key={idx} className="px-3 py-1 bg-slate-100 text-black rounded-full text-sm flex items-center gap-1">
-                                                    {skill}
-                                                </span>
-                                            ))}
-                                        </div>
-                                    ) : (
-                                        <p className='text-slate-400 font-med text-sm'>No skills mentioned.</p>
-                                    )}
-                                </div>
+
 
                             </div>
                         </div>
                     </div>
 
-                    <div className='md:w-1/2 bg-white h-[80vh] rounded-2xl flex items-center justify-center relative'>
-                        {pieChartData && pieChartData.length > 0 ? (
-                            <CollectionPieChart data={pieChartData} />
-                        ) : (
-                            <p className='text-slate-400 font-med'>No statistics available.</p>
-                        )}
+
+
+                    <div className='md:w-1/2 bg-white rounded-2xl px-8 py-5 '>
+                        <h1 className='font-head text-[3vh]'>Project Overview</h1>
+                        <div className='flex items-center justify-center relative'>
+                            {pieChartData && pieChartData.length > 0 ? (
+                                <CollectionPieChart data={pieChartData} />
+                            ) : (
+                                <p className='text-slate-400 font-med'>No statistics available.</p>
+                            )}
+                        </div>
+                        <div className=''>
+                            <h2 className="font-head text-[3vh] mb-2">Skills</h2>
+                            {user.skills && user.skills.length > 0 ? (
+                                <div className="flex flex-wrap gap-2">
+                                    {user.skills.map((skill, idx) => (
+                                        <span key={idx} className="px-3 py-1 bg-slate-100 text-black rounded-full text-sm flex items-center gap-1">
+                                            {skill}
+                                        </span>
+                                    ))}
+                                </div>
+                            ) : (
+                                <p className='text-slate-400 font-med text-sm'>No skills mentioned.</p>
+                            )}
+                        </div>
                     </div>
 
                 </div>

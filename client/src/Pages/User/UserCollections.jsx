@@ -40,7 +40,7 @@ export default function UserCollections() {
             <SideBar />
             <div className='w-full py-5 px-5 md:px-20'>
                 <div className='flex items-center gap-x-2 mb-5 font-helvetica' >
-                    <Link className='cursor-pointer hover:underline transition ' to={`/${username}`}>{user?.name}</Link>
+                    <Link className='cursor-pointer hover:underline transition text-gray-600 ' to={`/${username}`}>{user?.name}</Link>
                     <ChevronRight className="w-4 h-4" />
                     <h1>Collections</h1>
                 </div>

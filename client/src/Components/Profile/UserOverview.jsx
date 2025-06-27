@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { User2, Mail, Phone, MapPin, Globe, Pencil, Linkedin, Github,  Briefcase, FileText, Link, Star } from 'lucide-react';
-import { FaYoutube, FaDribbble, FaBehance , FaFigma } from 'react-icons/fa';
+import { User2, Mail, Phone, MapPin, Globe, Pencil, Linkedin, Github, Briefcase, FileText, Link, Star, Copy } from 'lucide-react';
+import { FaYoutube, FaDribbble, FaBehance, FaFigma } from 'react-icons/fa';
 import { RiEditFill } from "react-icons/ri";
 
 export default function UserOverview({ user, setUser, setAlert }) {
@@ -19,6 +19,12 @@ export default function UserOverview({ user, setUser, setAlert }) {
 
   const handleChange = (e) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  };
+
+  const handleCopyProfileUrl = () => {
+    const profileUrl = `${window.location.origin}/${user.username}`;
+    navigator.clipboard.writeText(profileUrl);
+    setAlert({ type: 'success', message: 'Profile URL copied to clipboard!' });
   };
 
   const handleUpdate = async () => {
@@ -144,6 +150,16 @@ export default function UserOverview({ user, setUser, setAlert }) {
                   <Phone className="inline mr-2 w-4 h-4" /> {user.phone}
                 </p>
               )}
+
+              <div className="mt-3">
+                <button
+                  onClick={handleCopyProfileUrl}
+                  className="flex items-center text-sm font-helvetica cursor-pointer text-gray-600 hover:text-gray-900"
+                >
+                  <Copy className="w-4 h-4 mr-1" /> Copy Profile URL
+                </button>
+              </div>
+
             </>
           )}
         </div>
@@ -151,9 +167,9 @@ export default function UserOverview({ user, setUser, setAlert }) {
 
       {/* Rest of the details... (unchanged) */}
       {/* Keep your bio, social links, etc. sections same as before */}
-      <div className="relative bg-white rounded-xl shadow p-6 space-y-5">
+      <div className="relative bg-white rounded-xl shadow p-8 space-y-5">
         {user.bio && (
-          <div className="pt-4">
+          <div className="">
             <h2 className="font-head text-lg mb-2">Bio</h2>
             <p className="text-slate-600">{user.bio}</p>
           </div>
