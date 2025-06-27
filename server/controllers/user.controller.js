@@ -240,6 +240,51 @@ exports.getProjectsList = async (req, res) => {
   }
 };
 
+exports.getProject = async (req, res) => {
+  const { username, collectionSlug, projectSlug } = req.params;
+
+  try {
+    // 1️⃣ Find user by username
+    const user = await User.findOne({ username });
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    // 2️⃣ Find the category (collection) by slug and userId
+    const category = await Category.findOne({
+      slug: collectionSlug,
+      userId: user._id,
+    });
+    if (!category) return res.status(404).json({ message: "Collection not found" });
+
+    // 3️⃣ Find the project by slug and categoryId
+    const project = await Projects.findOne({
+      slug: projectSlug,
+      categoryId: category._id,
+    });
+
+    if (!project) return res.status(404).json({ message: "Project not found" });
+
+    // ✅ Success
+    res.status(200).json({
+      user: {
+        _id: user._id,
+        name: user.name,
+        username: user.username,
+        profile: user.profile,
+      },
+      collection: {
+        _id: category._id,
+        title: category.title,
+        slug: category.slug,
+      },
+      project,
+    });
+
+  } catch (error) {
+    console.error("❌ Error fetching single project:", error);
+    res.status(500).json({ message: "Server Error" });
+  }
+};
+
 exports.updateUserData = async (req, res) => {
   try {
     const userId = req.user._id;

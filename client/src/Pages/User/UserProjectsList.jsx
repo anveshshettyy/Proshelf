@@ -38,11 +38,8 @@ export default function UserProjectsList() {
       <Navbar />
       <SideBar />
 
-
-
-
       <div className='w-full py-5 px-5 md:px-20'>
-        <div className='flex items-center gap-x-2 mb-5 font-helvetica' >
+        <div className='flex items-center  md:gap-x-2 mb-5 font-helvetica' >
           <Link className='cursor-pointer hover:underline transition ' to={`/${username}`}>{user?.name}</Link>
           <ChevronRight className="w-4 h-4" />
           <Link className='cursor-pointer hover:underline transition ' to={`/${username}/collections`}>{collection.title}</Link>
@@ -51,7 +48,7 @@ export default function UserProjectsList() {
         </div>
         <div className='flex justify-between items-center'>
           <div>
-            <h1 className='text-[5vh] font-head'>
+            <h1 className='text-[5vh] font-head leading-tight '>
               {collection?.title}
             </h1>
             <h2 className="text-gray-700 font-helvetica text-md mt-1">
