@@ -75,7 +75,7 @@ export default function AccountsAction({ setAlert }) {
           </div>
           <button
             onClick={confirmLogout}
-            className="flex items-center gap-2 bg-black text-white px-4 py-2 rounded-md hover:bg-gray-900 transition"
+            className="flex items-center gap-2 cursor-pointer bg-black text-white px-4 py-2 rounded-md hover:bg-gray-900 transition"
           >
             <LogOut size={18} />
             Logout
@@ -84,12 +84,12 @@ export default function AccountsAction({ setAlert }) {
 
         <div className="flex items-center justify-between bg-red-50 p-4 rounded-lg border border-red-200">
           <div>
-            <p className="text-lg font-head text-red-700">Delete Account</p>
+            <p className="text-lg font-head text-red-700 ">Delete Account</p>
             <p className="text-sm font-med text-red-600">All your projects, collections, and personal data will be permanently deleted</p>
           </div>
           <button
             onClick={confirmDelete}
-            className="flex items-center gap-2 bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 transition"
+            className="flex items-center gap-2 cursor-pointer bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 transition"
           >
             <Trash2 size={18} />
             Delete
