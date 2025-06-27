@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import Navbar from '../../Components/Navbar';
 import SideBar from '../../Components/SideBar';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { ChevronDown, ChevronRight, ChevronUp, ExternalLink, Github, LinkIcon } from 'lucide-react';
 import axios from 'axios';
 import Gallery from '../../Components/Project/ImageGallery'; // 💡 Import the new component
@@ -14,6 +14,7 @@ export default function UserProject() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isExpanded, setIsExpanded] = useState(false);
+  const navigate = useNavigate();
 
 
   useEffect(() => {

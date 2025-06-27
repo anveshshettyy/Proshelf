@@ -15,31 +15,31 @@ export default function CollectionPieChart({ data }) {
           borderWidth={1}
           borderColor={{ from: 'color', modifiers: [['darker', 0.3]] }}
           arcLinkLabelsSkipAngle={10}
-          arcLinkLabelsTextColor="#374151" // Tailwind slate-700
+          arcLinkLabelsTextColor="#374151" 
           arcLinkLabelsThickness={2}
           arcLinkLabelsColor={{ from: 'color' }}
           arcLabelsSkipAngle={10}
           arcLabelsTextColor={{ from: 'color', modifiers: [['darker', 2]] }}
           colors={[
-            '#6366f1', // indigo-500
-            '#f59e0b', // amber-500
-            '#10b981', // emerald-500
-            '#3b82f6', // blue-500
-            '#f43f5e', // rose-500
-            '#8b5cf6', // violet-500
-            '#14b8a6', // teal-500
-            '#ec4899', // pink-500
+            '#6366f1', 
+            '#f59e0b', 
+            '#10b981', 
+            '#3b82f6', 
+            '#f43f5e', 
+            '#8b5cf6', 
+            '#14b8a6', 
+            '#ec4899', 
           ]}
           theme={{
-            textColor: '#111827', // slate-900
+            textColor: '#111827', 
             fontSize: 14,
             tooltip: {
               container: {
-                background: '#f9fafb', // slate-50
+                background: '#f9fafb', 
                 color: '#111827',
                 fontSize: 14,
                 padding: '8px 12px',
-                border: '1px solid #e5e7eb', // slate-200
+                border: '1px solid #e5e7eb', 
                 borderRadius: '6px',
               },
             },
