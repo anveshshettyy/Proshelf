@@ -109,7 +109,7 @@ export default function ChangePassword({ setAlert, user }) {
       <button
         type="button"
         onClick={toggleVisibility}
-        className="text-sm flex items-center gap-1"
+        className="text-sm flex items-center gap-1 cursor-pointer "
       >
         {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
         {showPassword ? 'Hide Passwords' : 'Show Passwords'}
