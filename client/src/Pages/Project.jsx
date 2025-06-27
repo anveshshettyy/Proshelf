@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { ChevronRight, Edit2, Trash2, ExternalLink, Github, ArrowUpRight, EditIcon, Link2, LinkIcon, Link2Icon } from "lucide-react";
+import { ChevronRight, Edit2, Trash2, ExternalLink, Github, ArrowUpRight, EditIcon, Link2, LinkIcon, Link2Icon, ChevronUp, ChevronDown } from "lucide-react";
 import Navbar from "../Components/Navbar";
 import ProjectGallery from "../Components/Project/ProjectGallery";
 import EditProjectDrawer from "../Components/Project/UpdateProjectDrawer";
@@ -12,6 +12,7 @@ import DeleteIconB from '../assets/Images/deleteB.png';
 import CustomAlert from "../Components/CustomAlert";
 import ProjectVideo from "../Components/Project/ProjectVideo";
 import ConfirmPopup from '../Components/ConfirmPopup';
+import Loader from '../Components/Loader';
 
 export default function Project() {
     const navigate = useNavigate();
@@ -43,7 +44,7 @@ export default function Project() {
         setShowPopup(true);
     };
 
-
+    const [isExpanded, setIsExpanded] = useState(false);
 
     const toggleDrawer = () => setShowEditDrawer(!showEditDrawer);
 
@@ -73,7 +74,7 @@ export default function Project() {
     }, [id]);
 
 
-    if (loading) return <div>Loading...</div>;
+    if (loading) return <Loader />;
     if (!project) return <div>Project not found</div>;
 
     const handleEditSubmit = async (formData) => {
@@ -173,7 +174,7 @@ export default function Project() {
 
     const cancelPopup = () => {
         setShowPopup(false);
-        setOnConfirmCallback(() => () => {});
+        setOnConfirmCallback(() => () => { });
     };
 
     return (
@@ -228,21 +229,60 @@ export default function Project() {
 
             )}
 
-            <div className="p-4 md:px-15 md:py-6 w-full">
+            <div className="p-4 md:px-15  w-full">
                 <h1 className="text-3xl font-head pb-5">About Project</h1>
-                <div className={`${project.about ? "overflow-y-auto" : "overflow-y-hidden"
-                    } max-h-[500px] pr-2 bg-slate-100 md:px-10 md:py-7 rounded-xl p-5`}
-                    data-lenis-prevent>
+                <div
+                    className={`${project.about ? 'overflow-y-auto' : 'overflow-y-hidden'
+                        } relative max-h-[500px] pr-2 bg-slate-100 md:px-10 md:py-7 rounded-xl p-5`}
+                    data-lenis-prevent
+                >
                     {project.about ? (
-                        <p className="whitespace-pre-wrap font-med text-gray-700 leading-relaxed tracking-wide">
-                            {project.about}
-                        </p>
+                        <>
+                            <div
+                                className={`text-gray-700 leading-relaxed tracking-wide font-med transition-all duration-300 ease-in-out overflow-hidden ${isExpanded ? 'max-h-[9999px]' : 'max-h-[240px]'
+                                    }`}
+                            >
+                                {project.about.split('\r\n\r\n').map((para, i) => {
+                                    const isEmojiHeading = /^[^\w\s]/.test(para.trim());
+                                    return isEmojiHeading ? (
+                                        <p key={i} className="font-semibold text-[16px] mt-4">
+                                            {para}
+                                        </p>
+                                    ) : (
+                                        <p key={i} className="whitespace-pre-line mb-2">{para}</p>
+                                    );
+                                })}
+                            </div>
+
+                            {/* Fade Overlay */}
+                            {!isExpanded && (
+                                <div className="absolute bottom-0 left-0 w-full h-20 bg-gradient-to-t from-slate-100 to-transparent pointer-events-none" />
+                            )}
+
+                            {/* Read More / Show Less */}
+                            <div className="flex justify-center mt-4">
+                                <button
+                                    onClick={() => setIsExpanded(!isExpanded)}
+                                    className="flex items-center gap-1 text-blue-600 hover:underline font-medium cursor-pointer"
+                                >
+                                    {isExpanded ? (
+                                        <>
+                                            Show Less <ChevronUp className="w-4 h-4" />
+                                        </>
+                                    ) : (
+                                        <>
+                                            Read More <ChevronDown className="w-4 h-4" />
+                                        </>
+                                    )}
+                                </button>
+                            </div>
+                        </>
                     ) : (
                         <div className="text-center text-gray-600">
-                            <p className="text-lg font-med mb-2  ">No About section added yet.</p>
+                            <p className="text-lg font-med mb-2">No About section added yet.</p>
                             <button
                                 onClick={toggleDrawer}
-                                className="text-slate-600 hover: underline font-med cursor-pointer flex justify-center w-full items-center gap-2 "
+                                className="text-slate-600 hover:underline font-med cursor-pointer flex justify-center w-full items-center gap-2"
                             >
                                 Add About Info
                                 <EditIcon className="h-5 w-5" />
@@ -349,6 +389,8 @@ export default function Project() {
                     onAddImage={handleAddImage}
                 />
             </div>
+
+
             {showPopup && (
                 <ConfirmPopup
                     isOpen={showPopup}

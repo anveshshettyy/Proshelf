@@ -6,7 +6,8 @@ import UserSocialLinks from '../Components/Profile/UserAdditionalInfo';
 import ChangePassword from '../Components/Profile/ChangePassword';
 import AccountActions from '../Components/Profile/AccountsAction';
 import Navbar from '../Components/Navbar';
-import CustomAlert from '../Components/CustomAlert'; // ✅ IMPORT ALERT COMPONENT
+import CustomAlert from '../Components/CustomAlert'; 
+import Loader from '../Components/Loader';
 
 const tabs = [
   { name: 'Overview', key: 'overview', icon: <User className="w-5 h-5" /> },
@@ -45,7 +46,7 @@ export default function ProfileDashboard() {
   }, []);
 
   const renderComponent = () => {
-    if (loading) return <p className="text-center">Loading...</p>;
+    if (loading) return <Loader />;
     if (!userData) return <p className="text-center text-red-500">Failed to load data</p>;
 
     switch (activeTab) {
@@ -67,7 +68,7 @@ export default function ProfileDashboard() {
     <div className="w-full">
       <Navbar />
 
-      {/* ✅ Use Custom Alert Component */}
+      {/* Use Custom Alert Component */}
       {alert && <CustomAlert type={alert.type} message={alert.message} />}
 
       <div className="min-h-screen flex">

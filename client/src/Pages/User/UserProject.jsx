@@ -7,6 +7,7 @@ import { ChevronDown, ChevronRight, ChevronUp, ExternalLink, Github, LinkIcon } 
 import axios from 'axios';
 import Gallery from '../../Components/Project/ImageGallery'; // 💡 Import the new component
 import Footer from '../../Components/Footer';
+import Loader from '../../Components/Loader';
 
 export default function UserProject() {
   const { username, collectionSlug, projectSlug } = useParams();
@@ -32,7 +33,7 @@ export default function UserProject() {
     fetchProject();
   }, [username, collectionSlug, projectSlug]);
 
-  if (loading) return <p>Loading...</p>;
+  if (loading) return <Loader />;
   if (!data) return <p>No project data found.</p>;
 
   const { user, collection, project } = data;

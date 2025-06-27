@@ -305,7 +305,7 @@ export default function ProjectList() {
                                             />
                                         </div>
                                     ) : (
-                                        <div className="group  md:py-5 bg-slate-200  transition duration-500 rounded-2xl flex items-center gap-x-5 cursor-default p-10">
+                                        <div className="group  md:py-5 bg-slate-200  transition duration-500 rounded-2xl flex items-center gap-x-5 cursor-default md:p-10 px-5 py-4">
                                             <div className="relative h-10 w-10">
                                                 <img
                                                     className="absolute inset-0 h-full w-full object-contain"

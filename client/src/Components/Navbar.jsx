@@ -30,8 +30,8 @@ export default function Navbar() {
   const isLoggedIn = !!user;
 
   const getLinkClass = (path) =>
-    `px-10 py-2 rounded-3xl sm:rounded-none sm:px-0 sm:py-0 font-medium transition-all duration-200 ${location.pathname === path
-      ? 'md:bg-white md:text-black md:underline bg-slate-400 text-white'
+    `px-10 py-2 rounded-md sm:rounded-none sm:px-0 sm:py-0 font-medium transition-all duration-200 ${location.pathname === path
+      ? 'md:bg-white md:text-black md:underline bg-slate-200 text-black'
       : 'hover:text-slate-600'
     }`;
 
@@ -128,26 +128,54 @@ export default function Navbar() {
 
       {/* Mobile Slide Menu */}
       <div
-        className={`fixed top-0 right-0 h-full w-56 bg-white shadow-lg transform transition-transform duration-300 ease-in-out z-50 ${isOpen ? 'translate-x-0' : 'translate-x-full'
+        className={`fixed top-0 right-0 h-full w-56 px-10 bg-white shadow-lg transform transition-transform duration-300 ease-in-out z-50 ${isOpen ? 'translate-x-0' : 'translate-x-full'
           } md:hidden flex flex-col items-center pt-20 gap-6`}
       >
         {isLoggedIn ? (
           <>
-            <Link to="/" onClick={() => setIsOpen(false)}>
+            <Link
+              to="/"
+              onClick={() => setIsOpen(false)}
+              className={`${getLinkClass('/')} w-full text-center py-2`}
+            >
               Home
             </Link>
-            <Link to="/collections" onClick={() => setIsOpen(false)}>
+            <Link
+              to="/collections"
+              onClick={() => setIsOpen(false)}
+              className={`${getLinkClass('/collections')} w-full text-center py-2`}
+            >
               Collections
             </Link>
-            <Link to="/profile" onClick={() => setIsOpen(false)}>
-              View Profile
+            <Link
+              to="/profile"
+              onClick={() => setIsOpen(false)}
+              className={`${getLinkClass('/profile')} w-full text-center py-2`}
+            >
+              Profile
             </Link>
-            <button onClick={handleLogout}>Logout</button>
+            <button
+              onClick={handleLogout}
+              className="w-full text-center py-2 text-red-600 hover:bg-red-50 rounded-md"
+            >
+              Logout
+            </button>
           </>
         ) : (
-          guestLinks
+          <>
+            <Link to="/" className={`${getLinkClass('/')} w-full text-center py-2`} onClick={() => setIsOpen(false)}>
+              Home
+            </Link>
+            <Link to="/login" className={`${getLinkClass('/login')} w-full text-center py-2`} onClick={() => setIsOpen(false)}>
+              Login
+            </Link>
+            <Link to="/signup" className={`${getLinkClass('/signup')} w-full text-center py-2`} onClick={() => setIsOpen(false)}>
+              Sign Up
+            </Link>
+          </>
         )}
       </div>
+
     </nav>
   );
 }

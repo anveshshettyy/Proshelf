@@ -147,16 +147,16 @@ export default function UserOverview({ user, setUser, setAlert }) {
               <p className="text-slate-600">@{user.username}</p>
               {user.phone && (
                 <p className="text-black font-med mt-2">
-                  <Phone className="inline mr-2 w-4 h-4" /> {user.phone}
+                  <Phone className="inline mr-1 w-4 h-4" /> {user.phone}
                 </p>
               )}
 
-              <div className="mt-3">
+              <div className="mt-3 ml-4 md:ml-0">
                 <button
                   onClick={handleCopyProfileUrl}
                   className="flex items-center text-sm font-helvetica cursor-pointer text-gray-600 hover:text-gray-900"
                 >
-                  <Copy className="w-4 h-4 mr-1" /> Copy Profile URL
+                  <Copy className="w-4 h-4 mr-2 text-center" /> Copy Profile URL
                 </button>
               </div>
 

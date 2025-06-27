@@ -47,7 +47,7 @@ export default function UserCollections() {
                 <div className=''>
                     <div className='flex justify-between items-center'>
                         <div>
-                            <h1 className='text-[5vh] font-head'>
+                            <h1 className='text-[5vh] font-head leading-tight '>
                                 {user?.name?.split(' ')[0]}'s Collections
                             </h1>
                             <h2 className="text-gray-700 font-helvetica text-md mt-1">
@@ -83,7 +83,7 @@ export default function UserCollections() {
                                 <div className='flex gap-5 items-center'>
                                     <BsCollection className='h-10 w-10' />
                                     <div>
-                                        <h1 className='text-[3vh] font-head leading-[1.1] '>{collection.title}</h1>
+                                        <h1 className='text-xl font-head leading-[1.1] '>{collection.title}</h1>
                                         <p className='font-med text-sm'>
                                             {collection.description || 'No description'}
                                         </p>

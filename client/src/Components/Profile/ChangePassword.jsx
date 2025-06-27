@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { Eye, EyeOff } from 'lucide-react';
+import Loader from '../Loader';
 
 export default function ChangePassword({ setAlert, user }) {
   const [form, setForm] = useState({
@@ -9,7 +10,7 @@ export default function ChangePassword({ setAlert, user }) {
     confirmPassword: '',
   });
 
-  if (!user) return <p className="text-center">Loading...</p>;
+  if (!user) return <Loader />;
 
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -43,6 +44,11 @@ export default function ChangePassword({ setAlert, user }) {
 
       setAlert({ type: 'success', message: data.message });
       setForm({ oldPassword: '', newPassword: '', confirmPassword: '' });
+
+      setTimeout(() => {
+        window.location.reload();
+      }, 1500);
+      
     } catch (err) {
       setAlert({
         type: 'error',

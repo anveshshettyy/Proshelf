@@ -39,7 +39,7 @@ export default function Profile() {
         <div className='min-h-screen w-full'>
             <Navbar />
             <SideBar />
-            <div className=' md:py-10 md:px-20'>
+            <div className=' md:py-10 md:px-20 pb-12'>
                 <div className='w-full rounded-2xl bg-gray-100 md:p-10 flex flex-col md:flex-row gap-5 p-5 md:gap-x-10'>
                     <div className='md:w-1/2 rounded-2xl gap-5 flex flex-col md:gap-y-10'>
                         <div className='w-full bg-white rounded-2xl p-7 md:pb-5 flex flex-col gap-5'>
