@@ -4,7 +4,7 @@ import { ResponsivePie } from '@nivo/pie';
 export default function CollectionPieChart({ data }) {
   return (
     <div className="flex items-center justify-center w-full  min-h-[400px]">
-      <div className="w-full max-w-2xl h-[400px]  rounded-2xl  ">
+      <div className="w-full  h-[400px] rounded-2xl  ">
         <ResponsivePie
           data={data}
           margin={{ top: 40, right: 80, bottom: 80, left: 80 }}

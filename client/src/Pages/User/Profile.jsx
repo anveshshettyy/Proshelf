@@ -115,7 +115,7 @@ export default function Profile() {
 
 
 
-                    <div className='md:w-1/2 bg-white rounded-2xl px-8 py-5 '>
+                    <div className='md:w-1/2 bg-white rounded-2xl px-5 md:px-8 py-5 '>
                         <h1 className='font-head text-[3vh]'>Project Overview</h1>
                         <div className='flex items-center justify-center relative'>
                             {pieChartData && pieChartData.length > 0 ? (
