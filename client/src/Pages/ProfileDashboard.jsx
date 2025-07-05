@@ -86,7 +86,7 @@ export default function ProfileDashboard() {
               onClick={() => setActiveTab(tab.key)}
               className={`group flex items-center px-4 py-2 font-medium 
                 transition-all duration-300 w-full overflow-hidden rounded-full
-                ${activeTab === tab.key ? 'bg-black text-white' : 'text-black hover:bg-slate-100'}`}
+                ${activeTab === tab.key ? 'bg-black text-white cursor-pointer' : 'text-black hover:bg-slate-100 cursor-pointer'}`}
             >
               <div className="mr-2">{tab.icon}</div>
               <span className="whitespace-nowrap overflow-hidden max-w-0 group-hover:max-w-xs transition-all duration-300 ease-in-out">

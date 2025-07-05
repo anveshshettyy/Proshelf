@@ -32,7 +32,8 @@ export default function Login() {
       const response = await axios.post('/auth/login', formData);
       console.log('Login success:', response.data);
       showAlert('Login successful!', 'success');
-      setTimeout(() => navigate('/profile'), 1500);
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      window.location.href = "/collections";
     } catch (err) {
       console.error('Login error (frontend):', err);
       if (err.response?.data?.message) {

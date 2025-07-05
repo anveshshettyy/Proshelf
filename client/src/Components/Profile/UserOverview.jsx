@@ -3,6 +3,7 @@ import axios from 'axios';
 import { User2, Mail, Phone, MapPin, Globe, Pencil, Linkedin, Github, Briefcase, FileText, Link, Star, Copy } from 'lucide-react';
 import { FaYoutube, FaDribbble, FaBehance, FaFigma } from 'react-icons/fa';
 import { RiEditFill } from "react-icons/ri";
+import CropImageModal from '../CropImageModal';
 
 export default function UserOverview({ user, setUser, setAlert }) {
   if (!user) return <p className="text-center">No user data available.</p>;
@@ -11,6 +12,9 @@ export default function UserOverview({ user, setUser, setAlert }) {
   const [loading, setLoading] = useState(false);
   const [profilePreview, setProfilePreview] = useState(null); // Local preview for image
   const [selectedFile, setSelectedFile] = useState(null);     // File to upload
+  const [showCropper, setShowCropper] = useState(false);
+  const [imageForCropping, setImageForCropping] = useState(null);
+
 
   const [form, setForm] = useState({
     name: user.name || '',
@@ -69,10 +73,22 @@ export default function UserOverview({ user, setUser, setAlert }) {
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setSelectedFile(file);
-      setProfilePreview(URL.createObjectURL(file)); // Show preview
+      const reader = new FileReader();
+      reader.onload = () => {
+        setImageForCropping(reader.result); // Base64 image string
+        setShowCropper(true); // Show cropping modal
+      };
+      reader.readAsDataURL(file);
     }
   };
+
+  const handleCroppedImage = (croppedFile) => {
+    setSelectedFile(croppedFile);
+    setProfilePreview(URL.createObjectURL(croppedFile));
+    setShowCropper(false);
+  };
+
+
 
   return (
     <div className="flex flex-col gap-8">
@@ -234,6 +250,14 @@ export default function UserOverview({ user, setUser, setAlert }) {
           </div>
         )}
       </div>
+      {showCropper && (
+        <CropImageModal
+          image={imageForCropping}
+          onCropDone={handleCroppedImage}
+          onCancel={() => setShowCropper(false)}
+        />
+      )}
+
     </div>
   );
 }

@@ -21,11 +21,11 @@ export default function SideBar() {
           <Link
             key={tab.path}
             to={tab.path}
-            className={`group flex items-center px-4 py-2 font-medium 
+            className={`group flex items-center px-4 py-2 font-medium  
               transition-all duration-300 w-full overflow-hidden rounded-full
-              ${location.pathname === tab.path ? 'bg-black text-white' : 'text-black hover:bg-slate-100'}`}
+              ${location.pathname === tab.path ? 'bg-black text-white' : 'text-black  hover:bg-slate-100'}`}
           >
-            <div className="mr-2">{tab.icon}</div>
+            <div className="mr-2 ">{tab.icon}</div>
             <span className="whitespace-nowrap overflow-hidden max-w-0 group-hover:max-w-xs transition-all duration-300 ease-in-out">
               {tab.name}
             </span>
