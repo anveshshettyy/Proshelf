@@ -29,27 +29,32 @@ export default function SignUp() {
     };
 
     const handleSubmit = async e => {
-    e.preventDefault();
+        e.preventDefault();
 
-    if (formData.password.length < 6) {
-        showAlert('Password must be at least 6 characters');
-        return;
-    }
-
-    try {
-        const response = await axios.post('/auth/signup', formData);
-        ('Signup success:', response.data);
-        showAlert('Signup successful!', 'success');
-        setTimeout(() => navigate('/collections'), 1500);
-    } catch (err) {
-        console.error('Signup error (frontend):', err); 
-        if (err.response?.data?.message) {
-            showAlert(err.response.data.message);
-        } else {
-            showAlert('An unexpected error occurred.');
+        if (formData.password.length < 6) {
+            showAlert('Password must be at least 6 characters');
+            return;
         }
-    }
-};
+
+        try {
+            const response = await axios.post('/auth/signup', formData, {
+                withCredentials: true,
+            });
+
+
+            ('Signup success:', response.data);
+            showAlert('Signup successful!', 'success');
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            window.location.href = "/collections";
+        } catch (err) {
+            console.error('Signup error (frontend):', err);
+            if (err.response?.data?.message) {
+                showAlert(err.response.data.message);
+            } else {
+                showAlert('An unexpected error occurred.');
+            }
+        }
+    };
 
 
     const handleGoogleSignup = () => {

@@ -35,7 +35,7 @@ export default function Home() {
           </div>
 
           <div className="hidden lg:block lg:w-180 lg:h-full">
-            <ThreeScene />
+            {/* <ThreeScene /> */}
           </div>
         </section>
 

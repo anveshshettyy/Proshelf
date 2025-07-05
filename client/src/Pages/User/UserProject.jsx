@@ -5,7 +5,7 @@ import SideBar from '../../Components/SideBar';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { ChevronDown, ChevronRight, ChevronUp, ExternalLink, Github, LinkIcon } from 'lucide-react';
 import axios from 'axios';
-import Gallery from '../../Components/Project/ImageGallery'; // 💡 Import the new component
+import Gallery from '../../Components/Project/ImageGallery';
 import Footer from '../../Components/Footer';
 import Loader from '../../Components/Loader';
 
@@ -165,7 +165,7 @@ export default function UserProject() {
                 className="flex items-center gap-2 text-slate-700 underline hover:text-black transition"
               >
                 <LinkIcon className="w-5 h-5" />
-                View Source Code
+                {project.source}
               </a>
             </div>
           )}
@@ -181,7 +181,7 @@ export default function UserProject() {
                 className="flex items-center gap-2 text-slate-700 underline hover:text-black transition"
               >
                 <ExternalLink className="w-5 h-5" />
-                Visit Website
+                {project.liveDemo}
               </a>
             </div>
           )}
