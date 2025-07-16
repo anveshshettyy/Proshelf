@@ -55,6 +55,12 @@
   }
 }
 
-.animate-drawerSlideDown {
-  animation: drawerSlideDown 0.3s ease-out forwards;
+
+.bg-animated {
+  background: linear-gradient(135deg, rgba(30,30,60,1), rgba(20,20,20,1));
+  transition: all 0.4s ease;
 }
+
+
+
+

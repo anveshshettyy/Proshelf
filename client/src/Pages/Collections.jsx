@@ -183,7 +183,7 @@ export default function Collections() {
             <h1>Create Collection</h1>
           </div>
 
-          <div className='group border-2 rounded-2xl border-gray-500 p-2 flex cursor-pointer items-center gap-2 hover:border-black hover:text-black hover:shadow-lg duration-200 transition'>
+          {/* <div className='group border-2 rounded-2xl border-gray-500 p-2 flex cursor-pointer items-center gap-2 hover:border-black hover:text-black hover:shadow-lg duration-200 transition'>
             <div className='relative h-5 w-5'>
               <img
                 className='absolute inset-0 object-contain opacity-100 group-hover:opacity-0 transition duration-200'
@@ -197,7 +197,7 @@ export default function Collections() {
               />
             </div>
             <h1>Delete Collection</h1>
-          </div>
+          </div> */}
         </div>
       </div>
 

@@ -73,7 +73,7 @@ export default function Profile() {
                                         <div>
                                             <Globe className="inline w-4 h-4 mr-2 text-slate-400" />
                                             <a href={user.website} target="_blank" rel="noopener noreferrer" className="hover:underline">
-                                                {user.website}
+                                                Website
                                             </a>
                                         </div>
                                     )}
