@@ -2,13 +2,15 @@ import { useNavigate } from 'react-router-dom';
 import Navbar from '../Components/Navbar';
 import ThreeScene from '../Components/ThreeScene';
 import UIImage from '../assets/Images/UIImage.png';
+import KeyFeautures from '../Components/KeyFeautures';
+import Footer from '../Components/Footer';
 
 export default function Home() {
   const navigate = useNavigate();
   return (
     <div>
       <Navbar />
-      <div className='bg-gradient-to-br from-white to-gray-200  '>
+      <div className='bg-gradient-to-br from-white to-gray-100  '>
         <section className="relative  w-full h-[100dvh] flex p-20 overfhide md:justify-evenly justify-center overflow-hidden px-6">
           <div className="z-10 max-w-2xl  md:px-30 md:py-10">
             <h1 className="text-5xl sm:text-5xl md:text-6xl font-extrabold leading-tight font-med text-gray-900">
@@ -71,7 +73,7 @@ export default function Home() {
                   'polygon(50% 0%, 68% 16%, 100% 16%, 100% 100%, 25% 100%, 0 100%, 0 0)',
               }}
             >
-              <h1 className='text-2xl md:text-[4.5vh] font-helvetica-semi-bold leading-8'>Easy Project <br  />Management</h1>
+              <h1 className='text-2xl md:text-[4.5vh] font-helvetica-semi-bold leading-8'>Easy Project <br />Management</h1>
               <h1 className='text-base md:text-[2.3vh] font-med -tracking-normal'>Control your content effortlessly. Rename projects, update information, or delete images with just a click. The UI is clean and intuitive, ensuring you spend less time managing and more time creating.</h1>
             </div>
 
@@ -82,6 +84,15 @@ export default function Home() {
             </div>
           </div>
         </div>
+
+        <KeyFeautures />
+
+        <div>
+          Start Creating, Start Showcasing
+          Dive in and create your personalized project profile in minutes.
+        </div>
+
+        <Footer />
       </div>
 
     </div>
