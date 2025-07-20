@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import axios from '../lib/axios';
 import Navbar from '../Components/Navbar';
 import backgroundImage from '../assets/Images/beautiful-gray-color-gradient-background.avif';
-import GoogleLogo from '../assets/Images/google_Icon.webp';
+import GoogleLogo from '../assets/Images/Google_Icon.webp';
 import { useNavigate } from 'react-router-dom';
 import CustomAlert from '../Components/CustomAlert';
 
