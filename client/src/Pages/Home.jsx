@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../Components/Navbar';
 import ThreeScene from '../Components/ThreeScene';
-import UIImage from '../assets/Images/thumbnail.png';
+import UIImage from '../assets/Images/Thumbnail.png';
 import KeyFeautures from '../Components/KeyFeautures';
 import Footer from '../Components/Footer';
 
