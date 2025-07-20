@@ -22,8 +22,7 @@ const PORT = process.env.PORT || 5000;
 app.use(fileUpload());
 
 const allowedOrigins = [
-  'http://localhost:5173',
-  'https://your-frontend-name.onrender.com'  // <-- replace with actual frontend URL
+  'https://proshelf.vercel.app/'
 ];
 
 app.use(cors({

@@ -6,7 +6,11 @@ export default defineConfig({
   plugins: [react() , tailwindcss(),],
   server: {
     proxy: {
-      '/api': 'https://proshelf.onrender.com/',
+      '/api': {
+        target: 'https://proshelf.onrender.com',
+        changeOrigin: true,
+        secure: false,
+      },
     },
   },
   theme: {
