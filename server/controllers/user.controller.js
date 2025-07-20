@@ -124,6 +124,37 @@ exports.logout = async (req, res) => {
   }
 };
 
+exports.changePassword = async (req, res) => {
+  const { oldPassword, newPassword } = req.body;
+  const user = await User.findById(req.user._id).select('+password');
+
+  const isMatch = await bcrypt.compare(oldPassword, user.password);
+  if (!isMatch) {
+    return res.status(400).json({ message: 'Old password is incorrect' });
+  }
+
+  const hashedPassword = await bcrypt.hash(newPassword, 12);
+  user.password = hashedPassword;
+  await user.save();
+
+  res.json({ message: 'Password changed successfully' });
+}
+
+exports.createPassword = async (req, res) => {
+  const { newPassword } = req.body;
+  const user = await User.findById(req.user._id);
+
+  if (user.password) {
+    return res.status(400).json({ message: 'You already have a password' });
+  }
+
+  const hashedPassword = await bcrypt.hash(newPassword, 12);
+  user.password = hashedPassword;
+  await user.save();
+
+  res.json({ message: 'Password created successfully' });
+}
+
 exports.me = async (req, res) => {
   try {
     const user = await User.findById(req.user._id).select("+password"); // select password for checking

@@ -2,7 +2,7 @@ const Category = require('../models/category');
 const User = require('../models/user');
 
 exports.createCategory = async (req, res) => {
-  console.log("➡️ Hit createCategory API");
+  console.log("Hit createCategory API");
 
   const { title, description } = req.body;
   const userId = req.params.id;
@@ -33,10 +33,10 @@ exports.createCategory = async (req, res) => {
       { new: true }
     );
 
-    console.log("✅ Category saved:", saveCategory);
+    console.log("Category saved:", saveCategory);
     res.status(201).json(saveCategory);
   } catch (error) {
-    console.error("❌ Error while saving category:", error); // Always log error
+    console.error("Error while saving category:", error); // Always log error
     res.status(500).json({ message: "Server Error", error: error.message });
   }
 };

@@ -18,7 +18,7 @@ const categorySchema = new mongoose.Schema({
 
 
 categorySchema.pre("save", async function (next) {
-  console.log("🔥 Generating slug for:", this.title); 
+  console.log("Generating slug for:", this.title); 
   if (!this.isModified("title")) return next();
 
   const baseSlug = this.title
