@@ -24,7 +24,7 @@ router.get('/google/callback',
       secure: process.env.NODE_ENV === 'production',
     });
 
-    res.redirect('process.env.CLIENT_URL');
+    res.redirect(process.env.CLIENT_URL);
   }
 );
 
