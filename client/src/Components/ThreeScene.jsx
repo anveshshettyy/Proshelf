@@ -61,7 +61,7 @@ function Model({ isActive }) {
     invalidate();
   });
 
-  return <primitive ref={ref} object={scene} scale={1.2} />;
+  return <primitive ref={ref} object={scene} scale={0.7} />;
 }
 
 export default function ModelViewer() {
@@ -84,11 +84,11 @@ export default function ModelViewer() {
   }, []);
 
   return (
-    <div ref={canvasRef} className="w-full h-[60vh] rounded-2xl overflow-hidden">
+    <div ref={canvasRef} className="w-full h-[60vh] rounded-2xl">
       <Canvas
         shadows
         frameloop="demand"
-        camera={{ position: [0, 0, 5], fov: 50 }}
+        camera={{ position: [0, 0, 5], fov: 30 }}
       >
         <Suspense fallback={<meshStandardMaterial attach="material" color="gray" />}>
           <Environment preset="city" />

@@ -3,7 +3,7 @@ import { User, FolderKanban, ShieldCheck, Sparkles } from 'lucide-react';
 
 function KeyFeautures() {
     return (
-        <div className='w-full p-4 md:p-25'>
+        <div className='w-full p-4 md:p-25 mt-20 md:mt-0'>
             <div className='flex flex-col md:flex-row gap-8 md:gap-0'>
                 <div className='w-full md:w-[40%] md:pr-32 md:mt-10 p-5 md:p-0'>
                     <h1 className='text-3xl md:text-[7vh] font-med'>Key Features</h1>

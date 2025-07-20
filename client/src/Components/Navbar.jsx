@@ -103,7 +103,7 @@ export default function Navbar() {
 
   return (
     <nav className="w-full md:px-15 px-5 py-4 flex justify-between items-center relative z-50">
-      <div className="text-xl font-head">Proshelf</div>
+      <Link className='text-xl font-head' to="/">Proshelf</Link>
 
       <div className="md:hidden">
         <button

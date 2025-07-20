@@ -76,7 +76,7 @@ export default function ImageGallery({ images }) {
             whileHover={{ scale: 1.02 }}
             transition={{ duration: 0.2 }}
             onClick={() => openModal(index)}
-            className="break-inside-avoid overflow-hidden rounded-xl shadow-md cursor-pointer"
+            className="break-inside-avoid overflow-hidden rounded-sm shadow-md cursor-pointer"
           >
             <img
               src={img.url}
