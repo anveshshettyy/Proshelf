@@ -10,8 +10,8 @@ export default function UserOverview({ user, setUser, setAlert }) {
 
   const [editMode, setEditMode] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [profilePreview, setProfilePreview] = useState(null); // Local preview for image
-  const [selectedFile, setSelectedFile] = useState(null);     // File to upload
+  const [profilePreview, setProfilePreview] = useState(null);
+  const [selectedFile, setSelectedFile] = useState(null);  
   const [showCropper, setShowCropper] = useState(false);
   const [imageForCropping, setImageForCropping] = useState(null);
 
