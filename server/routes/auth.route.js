@@ -7,8 +7,7 @@ const { protectRoute } = require('../middleware/isLoggedIn');
 const User = require('../models/user');
 const bcrypt = require("bcrypt");
 
-
-
+// Google OAuth routes
 router.get('/google', passport.authenticate('google', {
   scope: ['profile', 'email']
 }));
@@ -29,36 +28,26 @@ router.get('/google/callback',
   }
 );
 
-
+// Protected routes
 router.get('/me', protectRoute, me);
 
+// Public profile routes (most specific first)
 router.get('/:username/:collectionSlug/:projectSlug', getProject);
-
 router.get('/:username/:collectionSlug', getProjectsList);
-
 router.get('/:username/collections', getCollections);
-
 router.get('/:username', getData);
 
+// Authentication routes
 router.post('/signup', signup);
-
 router.post('/login', login);
-
 router.post('/logout', logout);
 
-
+// Protected user routes
 router.put('/update-user', protectRoute, updateUserData);
-    
 router.post('/update-profile',protectRoute, updateProfile);
-
 router.put('/update-info', protectRoute, updateInfo);
-
 router.post('/change-password', protectRoute, changePassword);
-
-
 router.post('/create-password', protectRoute, createPassword);
-
-
 router.delete('/delete', protectRoute, deleteUser);
 
 module.exports = router;
