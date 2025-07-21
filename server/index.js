@@ -22,7 +22,7 @@ const PORT = process.env.PORT || 5000;
 app.use(fileUpload());
 
 const allowedOrigins = [
-  'https://proshelf.vercel.app/'
+  'https://proshelf.vercel.app'
 ];
 
 app.use(cors({
