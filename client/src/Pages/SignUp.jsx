@@ -37,7 +37,7 @@ export default function SignUp() {
         }
 
         try {
-            const response = await axios.post('/api/auth/signup', formData, {
+            const response = await axios.post('https://proshelf.onrender.com/api/auth/signup', formData, {
                 withCredentials: true,
             });
 
