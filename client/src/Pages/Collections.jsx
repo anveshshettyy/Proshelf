@@ -1,6 +1,5 @@
 import { useAuth } from '../Context/AuthContext';
 import React, { useEffect, useState } from 'react';
-import axios from '../../lib/axios';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../Components/Navbar';
 import CreateCollectionDrawer from '../Components/Collection/CreateCollectionDrawer';
@@ -13,11 +12,11 @@ import FolderIcon from '../assets/Images/folder.png';
 import EditIcon from '../assets/Images/edit.png';
 import { Folder } from 'lucide-react';
 import ConfirmPopup from '../Components/ConfirmPopup';
+import axios from '../lib/axios';
 
 export default function Collections() {
   const navigate = useNavigate();
   const { user } = useAuth();
-
   const [collections, setCollections] = useState([]);
   const [showDrawer, setShowDrawer] = useState(false);
   const [title, setTitle] = useState('');

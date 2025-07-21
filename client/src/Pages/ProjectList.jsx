@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { ChevronRight } from 'lucide-react';
-import axios from '../../lib/axios';
+import axios from '../lib/axios';
 import Navbar from "../Components/Navbar";
 import CreateProjectDrawer from '../Components/Project/CreateProjectDrawer';
 import EditProjectDrawer from '../Components/Project/EditProjectDrawer';

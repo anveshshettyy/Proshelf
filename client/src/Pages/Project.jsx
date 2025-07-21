@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
-import axios from '../../lib/axios';
+import axios from '../lib/axios';
 import { ChevronRight, Edit2, Trash2, ExternalLink, Github, ArrowUpRight, EditIcon, Link2, LinkIcon, Link2Icon, ChevronUp, ChevronDown } from "lucide-react";
 import Navbar from "../Components/Navbar";
 import ProjectGallery from "../Components/Project/ProjectGallery";
