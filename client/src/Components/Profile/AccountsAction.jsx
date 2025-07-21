@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { LogOut, Trash2 } from "lucide-react";
-import axios from "axios";
+import axios from '../../lib/axios';
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../Context/AuthContext";
 import ConfirmPopup from "../../Components/ConfirmPopup";

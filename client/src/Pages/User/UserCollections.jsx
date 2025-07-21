@@ -3,7 +3,7 @@ import Navbar from '../../Components/Navbar';
 import SideBar from '../../Components/SideBar';
 import { BsCollection } from "react-icons/bs";
 import { HiArrowUp } from "react-icons/hi2";
-import axios from 'axios';
+import axios from '../../lib/axios';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import Loader from '../../Components/Loader';
 import { ChevronRight } from 'lucide-react';

@@ -7,7 +7,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'https://proshelf.onrender.com',
+        target: 'https://proshelf.onrender.com/',
         changeOrigin: true,
         secure: false,
       },

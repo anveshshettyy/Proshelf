@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import axios from '../../lib/axios';
 import { Eye, EyeOff } from 'lucide-react';
 import Loader from '../Loader';
 

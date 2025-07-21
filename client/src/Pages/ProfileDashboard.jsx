@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import axios from '../../lib/axios';
 import { User, Lock, LogOut, Link2 } from 'lucide-react';
 import UserOverview from '../Components/Profile/UserOverview';
 import UserSocialLinks from '../Components/Profile/UserAdditionalInfo';

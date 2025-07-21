@@ -1,6 +1,6 @@
 import { useAuth } from '../Context/AuthContext';
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import axios from '../../lib/axios';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../Components/Navbar';
 import CreateCollectionDrawer from '../Components/Collection/CreateCollectionDrawer';

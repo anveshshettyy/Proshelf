@@ -4,7 +4,7 @@ import SideBar from '../../Components/SideBar';
 import { User2, Mail, Phone, MapPin, Globe, Pencil, Linkedin, Github, Briefcase, FileText, Link, Star } from 'lucide-react';
 import { FaYoutube, FaDribbble, FaBehance, FaFigma } from 'react-icons/fa';
 import CollectionPieChart from '../../Components/CollectionPieChart';
-import axios from 'axios';
+import axios from '../../lib/axios';
 import { useParams } from 'react-router-dom';
 import Loader from '../../Components/Loader';
 

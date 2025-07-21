@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import axios from '../../lib/axios';
 import { User2, Mail, Phone, MapPin, Globe, Pencil, Linkedin, Github, Briefcase, FileText, Link, Star, Copy } from 'lucide-react';
 import { FaYoutube, FaDribbble, FaBehance, FaFigma } from 'react-icons/fa';
 import { RiEditFill } from "react-icons/ri";
 import CropImageModal from '../CropImageModal';
 
+
 export default function UserOverview({ user, setUser, setAlert }) {
   if (!user) return <p className="text-center">No user data available.</p>;
+
 
   const [editMode, setEditMode] = useState(false);
   const [loading, setLoading] = useState(false);
