@@ -29,7 +29,7 @@ export default function Login() {
     e.preventDefault();
 
     try {
-      const response = await axios.post('/auth/login', formData);
+      const response = await axios.post('/api/auth/login', formData);
       console.log('Login success:', response.data);
       showAlert('Login successful!', 'success');
       await new Promise(resolve => setTimeout(resolve, 1000));
