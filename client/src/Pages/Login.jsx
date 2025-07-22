@@ -45,7 +45,7 @@ export default function Login() {
   };
 
   const handleGoogleLogin = () => {
-    window.location.href = '/google';
+    window.location.href = 'https://proshelf.onrender.com/api/auth/google';
   };
 
   return (
