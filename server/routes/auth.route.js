@@ -33,9 +33,9 @@ router.get('/google/callback',
 router.get('/me', protectRoute, me);
 
 // Public profile routes (most specific first)
+router.get('/:username/collections', getCollections);
 router.get('/:username/:collectionSlug/:projectSlug', getProject);
 router.get('/:username/:collectionSlug', getProjectsList);
-router.get('/:username/collections', getCollections);
 router.get('/:username', getData);
 
 // Authentication routes
