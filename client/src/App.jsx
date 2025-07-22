@@ -1,5 +1,5 @@
 import React from 'react'
-import { Route, Router, Routes } from 'react-router-dom'
+import { Route, Routes } from 'react-router-dom'
 import Collections from './Pages/Collections'
 import ProtectedRoute from './Components/ProtectedRoute'
 import Login from './Pages/Login'
