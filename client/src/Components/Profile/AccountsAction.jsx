@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { LogOut, Trash2 } from "lucide-react";
-import axios from '../../lib/axios';
+import axiosInstance from '../../lib/axios';
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../Context/AuthContext";
 import ConfirmPopup from "../../Components/ConfirmPopup";
+import axiosInstance from "../../lib/axios";
 
 export default function AccountsAction({ setAlert }) {
   const navigate = useNavigate();
@@ -30,7 +31,7 @@ export default function AccountsAction({ setAlert }) {
       document.cookie = 'jwt=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
       
       // Then make the delete request
-      await axios.delete("/api/auth/delete", { withCredentials: true });
+      await axiosInstance.delete("/api/auth/delete", { withCredentials: true });
       
       // Clear the auth state
       await logout();

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from '../lib/axios';
+import axiosInstance from '../lib/axios';
 import Navbar from '../Components/Navbar';
 import backgroundImage from '../assets/Images/beautiful-gray-color-gradient-background.avif';
 import GoogleLogo from '../assets/Images/Google_Icon.webp'
@@ -29,7 +29,7 @@ export default function Login() {
     e.preventDefault();
 
     try {
-      const response = await axios.post('https://proshelf.onrender.com/api/auth/login', formData);
+      const response = await axiosInstance.post('/api/auth/login', formData);
       console.log('Login success:', response.data);
       showAlert('Login successful!', 'success');
       await new Promise(resolve => setTimeout(resolve, 1000));
@@ -45,7 +45,7 @@ export default function Login() {
   };
 
   const handleGoogleLogin = () => {
-    window.location.href = 'https://proshelf.onrender.com/api/auth/google';
+    window.location.href = '/api/auth/google';
   };
 
   return (

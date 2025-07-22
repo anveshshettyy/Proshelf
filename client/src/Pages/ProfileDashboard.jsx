@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from '../lib/axios';
+import axiosInstance from '../lib/axios';
 import { User, Lock, LogOut, Link2 } from 'lucide-react';
 import UserOverview from '../Components/Profile/UserOverview';
 import UserSocialLinks from '../Components/Profile/UserAdditionalInfo';
@@ -33,7 +33,7 @@ export default function ProfileDashboard() {
 
 
   useEffect(() => {
-    axios.get('/api/auth/me')
+    axiosInstance.get('/api/auth/me')
       .then(res => {
         setUserData(res.data.user);
         setLoading(false);

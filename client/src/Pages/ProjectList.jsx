@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { ChevronRight } from 'lucide-react';
-import axios from '../lib/axios';
 import Navbar from "../Components/Navbar";
 import CreateProjectDrawer from '../Components/Project/CreateProjectDrawer';
 import EditProjectDrawer from '../Components/Project/EditProjectDrawer';
@@ -13,6 +12,7 @@ import ProjectIcon from '../assets/Images/project.png';
 import EditIcon from '../assets/Images/edit.png';
 import CustomAlert from '../Components/CustomAlert';
 import ConfirmPopup from '../Components/ConfirmPopup';
+import axiosInstance from '../lib/axios';
 
 export default function ProjectList() {
     const { id } = useParams();
@@ -53,7 +53,7 @@ export default function ProjectList() {
 
     const handleDelete = async (projectId) => {
         try {
-            await axios.delete(`/api/projects/delete/${projectId}`, { withCredentials: true });
+            await axiosInstance.delete(`/api/projects/delete/${projectId}`, { withCredentials: true });
             setProjects((prev) => prev.filter((p) => p._id !== projectId));
             setAlert({ show: true, message: "Project deleted successfully", type: "success" });
             setShowPopup(false);
@@ -75,7 +75,7 @@ export default function ProjectList() {
         if (!id) return;
         const fetchCategoryAndProjects = async () => {
             try {
-                const res = await axios.get(`/api/projects/${id}`, { withCredentials: true });
+                const res = await axiosInstance.get(`/api/projects/${id}`, { withCredentials: true });
                 setCategory(res.data.category);
                 setProjects(res.data.projects);
             } catch (error) {
@@ -117,7 +117,7 @@ export default function ProjectList() {
                 formData.append('video', video);
             }
 
-            const res = await axios.post(
+            const res = await axiosInstance.post(
                 `/api/projects/create/${category._id}`,
                 formData,
                 {
@@ -164,7 +164,7 @@ export default function ProjectList() {
         if (!editingProject || !editingProject._id) return;
 
         try {
-            const res = await axios.post(
+            const res = await axiosInstance.post(
                 `/api/projects/update/${editingProject._id}`,
                 { title: editTitle, description: editDescription },
                 { withCredentials: true }

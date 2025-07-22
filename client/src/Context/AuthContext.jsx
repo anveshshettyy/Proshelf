@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect } from 'react';
-import axios from '../lib/axios';
+import axiosInstance from '../../lib/axios';
 
 const AuthContext = createContext();
 
@@ -10,7 +10,7 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     async function fetchUser() {
       try {
-        const res = await axios.get('/api/auth/me');
+        const res = await axiosInstance.get('/api/auth/me');
         setUser(res.data.user);
       } catch (error) {
         setUser(null);
@@ -22,13 +22,13 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const login = async (credentials) => {
-    await axios.post('/api/auth/login', credentials);
-    const res = await axios.get('/api/auth/me');
+    await axiosInstance.post('/api/auth/login', credentials);
+    const res = await axiosInstance.get('/api/auth/me');
     setUser(res.data.user);
   };
 
   const logout = async () => {
-    await axios.post('/api/auth/logout');
+    await axiosInstance.post('/api/auth/logout');
     setUser(null);
   };
 

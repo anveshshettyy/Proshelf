@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import axios from '../../lib/axios';
+import axiosInstance from '../../lib/axios';
 import { Eye, EyeOff } from 'lucide-react';
 import Loader from '../Loader';
+import axiosInstance from '../../lib/axios';
 
 export default function ChangePassword({ setAlert, user }) {
   const [form, setForm] = useState({
@@ -38,7 +39,7 @@ export default function ChangePassword({ setAlert, user }) {
         ? form
         : { newPassword: form.newPassword }; // Don't send oldPassword if creating
 
-      const { data } = await axios.post(route, payload, {
+      const { data } = await axiosInstance.post(route, payload, {
         withCredentials: true,
       });
 

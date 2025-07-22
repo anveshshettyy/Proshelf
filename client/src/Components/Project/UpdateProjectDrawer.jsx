@@ -31,7 +31,7 @@ export default function EditProjectDrawer({
       formData.append('video', video);
     }
 
-    onSubmit(formData); // You can call axios.put inside parent component
+    onSubmit(formData); // You can call axiosInstance.put inside parent component
   };
 
   return (

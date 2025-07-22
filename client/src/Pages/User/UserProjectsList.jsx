@@ -3,7 +3,7 @@ import Navbar from '../../Components/Navbar';
 import SideBar from '../../Components/SideBar';
 import { HiArrowUp } from "react-icons/hi2";
 import { RiFolder6Fill } from "react-icons/ri";
-import axios from '../../lib/axios';
+import axiosInstance from '../../lib/axios';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import Loader from '../../Components/Loader';
 import { ChevronRight } from 'lucide-react';
@@ -18,7 +18,7 @@ export default function UserProjectsList() {
   useEffect(() => {
     const fetchProjects = async () => {
       try {
-        const res = await axios.get(`/api/auth/${username}/${collectionSlug}`);
+        const res = await axiosInstance.get(`/api/auth/${username}/${collectionSlug}`);
         setUser(res.data.user);
         setCollection(res.data.collection);
       } catch (err) {

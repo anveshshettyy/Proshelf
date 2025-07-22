@@ -3,7 +3,7 @@ import Navbar from '../../Components/Navbar';
 import SideBar from '../../Components/SideBar';
 import { BsCollection } from "react-icons/bs";
 import { HiArrowUp } from "react-icons/hi2";
-import axios from '../../lib/axios';
+import axiosInstance from '../../lib/axios';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import Loader from '../../Components/Loader';
 import { ChevronRight } from 'lucide-react';
@@ -18,7 +18,7 @@ export default function UserCollections() {
     useEffect(() => {
         const fetchCollections = async () => {
             try {
-                const res = await axios.get(`/api/auth/${username}/collections`);
+                const res = await axiosInstance.get(`/api/auth/${username}/collections`);
                 setUser(res.data.user);
                 setCollections(res.data.collections);
             } catch (err) {

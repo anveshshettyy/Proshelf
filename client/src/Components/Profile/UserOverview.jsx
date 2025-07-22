@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from '../../lib/axios';
+import axiosInstance from '../../lib/axios';
 import { User2, Mail, Phone, MapPin, Globe, Pencil, Linkedin, Github, Briefcase, FileText, Link, Star, Copy } from 'lucide-react';
 import { FaYoutube, FaDribbble, FaBehance, FaFigma } from 'react-icons/fa';
 import { RiEditFill } from "react-icons/ri";
@@ -37,7 +37,7 @@ export default function UserOverview({ user, setUser, setAlert }) {
     setLoading(true);
     try {
       // Update basic info
-      const { data } = await axios.put(
+      const { data } = await axiosInstance.put(
         "/api/auth/update-user",
         { name: form.name, username: form.username },
         { withCredentials: true }
@@ -48,7 +48,7 @@ export default function UserOverview({ user, setUser, setAlert }) {
         const formData = new FormData();
         formData.append("profilePic", selectedFile);
 
-        const res = await axios.post("/api/auth/update-profile", formData, {
+        const res = await axiosInstance.post("/api/auth/update-profile", formData, {
           withCredentials: true,
           headers: { "Content-Type": "multipart/form-data" },
         });

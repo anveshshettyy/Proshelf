@@ -12,7 +12,7 @@ import FolderIcon from '../assets/Images/folder.png';
 import EditIcon from '../assets/Images/edit.png';
 import { Folder } from 'lucide-react';
 import ConfirmPopup from '../Components/ConfirmPopup';
-import axios from '../lib/axios';
+import axiosInstance from '../lib/axios';
 
 export default function Collections() {
   const navigate = useNavigate();
@@ -36,7 +36,7 @@ export default function Collections() {
 
   const fetchCollections = async () => {
     try {
-      const res = await axios.get('/api/category/', {
+      const res = await axiosInstance.get('/api/category/', {
         withCredentials: true,
       });
       setCollections(res.data);
@@ -63,7 +63,7 @@ export default function Collections() {
     }
 
     try {
-      const res = await axios.post(
+      const res = await axiosInstance.post(
         `/api/category/create/${user._id}`,
         { title, description },
         { withCredentials: true }
@@ -104,7 +104,7 @@ export default function Collections() {
     }
 
     try {
-      const res = await axios.put(
+      const res = await axiosInstance.put(
         `/api/category/edit/${editingCollection._id}`,
         { title: editTitle, description: editDescription },
         { withCredentials: true }
@@ -133,7 +133,7 @@ export default function Collections() {
 
   const handleDeleteConfirmed = async () => {
     try {
-      await axios.delete(`/api/category/delete/${selectedId}`, { withCredentials: true });
+      await axiosInstance.delete(`/api/category/delete/${selectedId}`, { withCredentials: true });
       setCollections((prev) => prev.filter((col) => col._id !== selectedId));
     } catch (err) {
       console.error('Error deleting collection:', err);

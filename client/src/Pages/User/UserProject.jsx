@@ -4,7 +4,7 @@ import Navbar from '../../Components/Navbar';
 import SideBar from '../../Components/SideBar';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { ChevronDown, ChevronRight, ChevronUp, ExternalLink, Github, LinkIcon } from 'lucide-react';
-import axios from '../../lib/axios';
+import axiosInstance from '../../lib/axios';
 import Gallery from '../../Components/Project/ImageGallery';
 import Footer from '../../Components/Footer';
 import Loader from '../../Components/Loader';
@@ -20,7 +20,7 @@ export default function UserProject() {
   useEffect(() => {
     const fetchProject = async () => {
       try {
-        const res = await axios.get(
+        const res = await axiosInstance.get(
           `/api/auth/${username}/${collectionSlug}/${projectSlug}`
         );
         setData(res.data);

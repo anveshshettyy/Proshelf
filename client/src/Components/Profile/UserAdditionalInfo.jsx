@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from '../../lib/axios';
+import axiosInstance from '../../lib/axios';
 import { User2, Mail, Phone, MapPin, Globe, Pencil, Linkedin, Github,  Briefcase, FileText, Link, Star } from 'lucide-react';
 import { FaYoutube, FaDribbble, FaBehance, FaFigma } from 'react-icons/fa';
 import { AiOutlinePlus } from 'react-icons/ai';
@@ -55,7 +55,7 @@ export default function UserAdditionalInfo({ user, setUser, setAlert }) {
         }
       }
 
-      const { data } = await axios.put("/api/auth/update-info", formData, {
+      const { data } = await axiosInstance.put("/api/auth/update-info", formData, {
         withCredentials: true,
         headers: { "Content-Type": "multipart/form-data" },
       });

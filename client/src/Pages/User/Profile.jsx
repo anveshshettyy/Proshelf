@@ -4,7 +4,7 @@ import SideBar from '../../Components/SideBar';
 import { User2, Mail, Phone, MapPin, Globe, Pencil, Linkedin, Github, Briefcase, FileText, Link, Star } from 'lucide-react';
 import { FaYoutube, FaDribbble, FaBehance, FaFigma } from 'react-icons/fa';
 import CollectionPieChart from '../../Components/CollectionPieChart';
-import axios from '../../lib/axios';
+import axiosInstance from '../../lib/axios';
 import { useParams } from 'react-router-dom';
 import Loader from '../../Components/Loader';
 
@@ -17,7 +17,7 @@ export default function Profile() {
     useEffect(() => {
         const fetchUserProfile = async () => {
             try {
-                const response = await axios.get(`/api/auth/${username}`);
+                const response = await axiosInstance.get(`/api/auth/${username}`);
                 setUser(response.data.user);
                 setPieChartData(response.data.pieChartData);
             } catch (error) {

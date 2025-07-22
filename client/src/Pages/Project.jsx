@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
-import axios from '../lib/axios';
+import axiosInstance from '../lib/axios';
 import { ChevronRight, Edit2, Trash2, ExternalLink, Github, ArrowUpRight, EditIcon, Link2, LinkIcon, Link2Icon, ChevronUp, ChevronDown } from "lucide-react";
 import Navbar from "../Components/Navbar";
 import ProjectGallery from "../Components/Project/ProjectGallery";
@@ -62,7 +62,7 @@ export default function Project() {
         const fetchProject = async () => {
             try {
                 setLoading(true);
-                const res = await axios.get(`/api/projects/single/${id}`, { withCredentials: true });
+                const res = await axiosInstance.get(`/api/projects/single/${id}`, { withCredentials: true });
                 setProject(res.data.project); // Set project first
             } catch (error) {
                 console.error("Error fetching single project:", error);
@@ -79,7 +79,7 @@ export default function Project() {
 
     const handleEditSubmit = async (formData) => {
         try {
-            const res = await axios.post(`/api/projects/update/${project._id}`, formData, {
+            const res = await axiosInstance.post(`/api/projects/update/${project._id}`, formData, {
                 withCredentials: true,
                 headers: {
                     "Content-Type": "multipart/form-data",
@@ -97,7 +97,7 @@ export default function Project() {
         try {
             setAlert({ message: "Deleting video. Please wait...", type: "info" });
 
-            await axios.put(
+            await axiosInstance.put(
                 `/api/projects/remove-video/${project._id}`,
                 {},
                 { withCredentials: true }
@@ -116,7 +116,7 @@ export default function Project() {
         try {
             setAlert({ message: "Deleting image. Please wait...", type: "info" });
 
-            const res = await axios.put(
+            const res = await axiosInstance.put(
                 `/api/projects/remove-image/${project._id}`,
                 { public_id: image.public_id }, // 
                 { withCredentials: true }
@@ -141,7 +141,7 @@ export default function Project() {
         try {
             setAlert({ message: "Adding image. Please wait...", type: "info" });
 
-            const res = await axios.post(`/api/projects/add-image/${project._id}`, formData, {
+            const res = await axiosInstance.post(`/api/projects/add-image/${project._id}`, formData, {
                 withCredentials: true,
                 headers: { "Content-Type": "multipart/form-data" },
             });
@@ -156,7 +156,7 @@ export default function Project() {
 
     const handleDelete = async (projectId) => {
         try {
-            await axios.delete(`/api/projects/delete/${projectId}`, { withCredentials: true });
+            await axiosInstance.delete(`/api/projects/delete/${projectId}`, { withCredentials: true });
 
             setAlert({ message: "Project deleted successfully!", type: "success" });
             navigate(-1); // or navigate("/collections")
@@ -365,7 +365,7 @@ export default function Project() {
                         try {
                             setAlert({ message: "Uploading video...", type: "info" });
 
-                            const res = await axios.put(`/api/projects/add-video/${project._id}`, formData, {
+                            const res = await axiosInstance.put(`/api/projects/add-video/${project._id}`, formData, {
                                 withCredentials: true,
                                 headers: { "Content-Type": "multipart/form-data" },
                             });
