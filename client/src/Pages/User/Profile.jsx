@@ -116,7 +116,11 @@ export default function Profile() {
 
 
                     <div className='md:w-1/2 bg-white rounded-2xl px-5 md:px-8 py-5 '>
-                        <h1 className='font-head text-[3vh]'>Project Overview</h1>
+                        <div className='w-full justify-between'>
+                            <h1 className='font-head text-[3vh]'>Project Overview</h1>
+                            <Link to={`/${username}/collections`} className='font-head underline text-[2.5vh] text-slate-700'>View Projects</Link>
+                        </div>
+
                         <div className='flex items-center justify-center relative'>
                             {pieChartData && pieChartData.length > 0 ? (
                                 <CollectionPieChart data={pieChartData} />
