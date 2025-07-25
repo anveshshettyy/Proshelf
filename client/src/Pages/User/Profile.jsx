@@ -116,9 +116,9 @@ export default function Profile() {
 
 
                     <div className='md:w-1/2 bg-white rounded-2xl px-5 md:px-8 py-5 '>
-                        <div className='w-full justify-between'>
+                        <div className='w-full justify-between flex'>
                             <h1 className='font-head text-[3vh]'>Project Overview</h1>
-                            <Link to={`/${username}/collections`} className='font-head underline text-[2.5vh] text-slate-700'>View Projects</Link>
+                            <Link to={`/${username}/collections`} className='font-head underline text-[2.5vh] text-gray-500'>View Projects</Link>
 
                             
                         </div>
