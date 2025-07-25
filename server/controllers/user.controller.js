@@ -86,7 +86,6 @@ exports.login = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    // ❌ If user has googleId but still no password, block password login
     if (!user.password) {
       return res.status(400).json({
         message: user.googleId
@@ -95,13 +94,11 @@ exports.login = async (req, res) => {
       });
     }
 
-    // ✅ Now compare password
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res.status(401).json({ message: "Invalid credentials" });
     }
 
-    // ✅ Generate tokens and respond
     generateTokens(user._id, res);
 
     res.status(200).json({
@@ -323,21 +320,17 @@ exports.updateUserData = async (req, res) => {
     const userId = req.user._id;
     const { name, email, username } = req.body;
 
-    if (!name && !email && !username) {
-      return res.status(400).json({ message: "No data provided for update" });
-    }
-
     const updatedFields = {};
-    username = username.toLowerCase();
     if (username) {
+      const usernameLower = username.toLowerCase();
       const usernameRegex = /^[a-z0-9._]+$/;
-      if (!usernameRegex.test(username)) {
+      if (!usernameRegex.test(usernameLower)) {
         return res.status(400).json({
           message:
             "Username can only contain lowercase letters, numbers, and underscores with no spaces.",
         });
       }
-      updatedFields.username = username;
+      updatedFields.username = usernameLower;
     }
 
     if (name) updatedFields.name = name;
