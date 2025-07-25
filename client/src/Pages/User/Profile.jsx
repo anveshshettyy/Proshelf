@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import Navbar from '../../Components/Navbar';
 import SideBar from '../../Components/SideBar';
-import { User2, Mail, Phone, MapPin, Globe, Pencil, Linkedin, Github, Briefcase, FileText, Link, Star } from 'lucide-react';
+import { User2, Mail, Phone, MapPin, Globe, Pencil, Linkedin, Github, Briefcase, FileText } from 'lucide-react';
 import { FaYoutube, FaDribbble, FaBehance, FaFigma } from 'react-icons/fa';
 import CollectionPieChart from '../../Components/CollectionPieChart';
 import axiosInstance from '../../lib/axios';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import Loader from '../../Components/Loader';
 
 export default function Profile() {
@@ -119,6 +119,8 @@ export default function Profile() {
                         <div className='w-full justify-between'>
                             <h1 className='font-head text-[3vh]'>Project Overview</h1>
                             <Link to={`/${username}/collections`} className='font-head underline text-[2.5vh] text-slate-700'>View Projects</Link>
+
+                            
                         </div>
 
                         <div className='flex items-center justify-center relative'>
