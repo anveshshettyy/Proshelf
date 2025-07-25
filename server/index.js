@@ -48,6 +48,11 @@ app.use(cookieParser());
 app.use(passport.initialize());
 
 // Routes
+app.get('/keepalive', (req, res) => {
+  res.status(200).send('🟢 I am alive');
+});
+
+
 app.get('/api', (req, res) => {
   res.json({ message: "Hello from the backend!" });
 });
