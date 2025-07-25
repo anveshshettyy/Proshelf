@@ -14,11 +14,13 @@ exports.signup = async (req, res) => {
       return res.status(400).json({ message: "All fields are required" });
     }
 
+    username = username.toLowerCase();
+
     const usernameRegex = /^[a-zA-Z0-9_]+$/;
     if (!usernameRegex.test(username)) {
       return res.status(400).json({
         message:
-          "Username can only contain letters, numbers, and underscores with no spaces.",
+          "Username can only contain lowercase letters, numbers, and underscores with no spaces.",
       });
     }
 
