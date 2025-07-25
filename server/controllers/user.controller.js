@@ -326,13 +326,13 @@ exports.updateUserData = async (req, res) => {
     }
 
     const updatedFields = {};
-
+    username = username.toLowerCase();
     if (username) {
-      const usernameRegex = /^[a-zA-Z0-9._]+$/;
+      const usernameRegex = /^[a-z0-9._]+$/;
       if (!usernameRegex.test(username)) {
         return res.status(400).json({
           message:
-            "Username can only contain letters, numbers, and underscores with no spaces.",
+            "Username can only contain lowercase letters, numbers, and underscores with no spaces.",
         });
       }
       updatedFields.username = username;
