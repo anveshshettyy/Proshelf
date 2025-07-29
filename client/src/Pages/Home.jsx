@@ -48,7 +48,7 @@ export default function Home() {
             <p className='text-center font-med md:text-xl text:md text-gray-500 '>Store designs, prototypes, videos, and visuals that bring your project to life. From the first wireframe to the final polish — every detail matters, and this is where it lives.</p>
           </div>
 
-          <div className='md:h-150 h-72 w-full lg:w-[90%] bg-slate-300 '>
+          <div className='md:h-150 h-52 w-full lg:w-[90%] bg-slate-300 '>
             <img className='w-full h-full object-fill ' src={UIImage} alt="" />
           </div>
         </div>
@@ -62,7 +62,7 @@ export default function Home() {
               <h1 className='text-base md:text-[2.3vh] font-helvetica'>This platform is designed to help creatives, developers, and teams showcase their projects visually. With features like image galleries, detailed descriptions, and fullscreen previews, it's a simple yet powerful way to present your work, stay organized, and manage media with ease.</h1>
             </div>
 
-            <div className="md:h-[60vh] md:w-[60vh] h-[40vh]  bg-gradient-to-br from-slate-800 via-gray-900 to-black text-white rounded-xl p-7 flex flex-col justify-between shadow-lg shadow-black/30 transition duration-300">
+            <div className="md:h-[60vh] md:w-[60vh] h-[40vh] mt-24 md:mt-0  bg-gradient-to-br from-slate-800 via-gray-900 to-black text-white rounded-xl p-7 flex flex-col justify-between shadow-lg shadow-black/30 transition duration-300">
 
 
               <h1 className='text-2xl md:text-[4.5vh] font-helvetica-semi-bold leading-8'>Project <br className="hidden md:block" /> Galleries</h1>
