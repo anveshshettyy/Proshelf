@@ -219,7 +219,7 @@ export default function Project() {
 
 
             {showEditDrawer && (
-                <div className="md:px-15 px-2 pb-5">
+                <div className="md:px-15 px-5 pb-5">
                     <EditProjectDrawer
                         initialData={project}
                         onClose={() => setShowEditDrawer(false)}
