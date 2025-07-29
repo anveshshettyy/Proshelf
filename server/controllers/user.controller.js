@@ -564,17 +564,13 @@ exports.deleteUser = async (req, res) => {
         });
       }
 
-      // ❌ Delete project document
       await Projects.findByIdAndDelete(project._id);
     }
 
-    // ❌ Delete all categories belonging to user
     await Category.deleteMany({ user: userId });
 
-    // ❌ Finally delete user
     await User.findByIdAndDelete(userId);
 
-    // 🧹 Clear JWT cookie and respond
     res.clearCookie("jwt", {
       httpOnly: true,
       sameSite: "Lax",

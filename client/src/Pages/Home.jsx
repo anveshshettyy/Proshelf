@@ -48,7 +48,7 @@ export default function Home() {
             <p className='text-center font-med md:text-xl text:md text-gray-500 '>Store designs, prototypes, videos, and visuals that bring your project to life. From the first wireframe to the final polish — every detail matters, and this is where it lives.</p>
           </div>
 
-          <div className='h-150 w-full lg:w-[90%] bg-slate-300 '>
+          <div className='md:h-150 h-72 w-full lg:w-[90%] bg-slate-300 '>
             <img className='w-full h-full object-fill ' src={UIImage} alt="" />
           </div>
         </div>
@@ -81,7 +81,7 @@ export default function Home() {
               <h1 className='text-base md:text-[2.3vh] font-med -tracking-normal'>Control your content effortlessly. Rename projects, update information, or delete images with just a click. The UI is clean and intuitive, ensuring you spend less time managing and more time creating.</h1>
             </div>
 
-            <div className='h-[40vh] w-full md:h-[60vh] md:w-[50vh] p-5 md:ml-15 flex flex-col md:block hidden '>
+            <div className='h-[50vh] w-full md:h-[60vh] md:w-[50vh] p-5 md:ml-15 flex flex-col md:block hidden '>
               <h1 className='text-3xl md:text-[7vh] font-med leading-10 md:leading-12'>About <br className="hidden md:block" /> this Platform</h1>
               <div className='w-full h-[0.2vh] bg-black md:mt-5 mt-2 mb-3 md:mb-12'></div>
               <h1 className='text-base md:text-[2.3vh] font-helvetica'>This platform is designed to help creatives, developers, and teams showcase their projects visually. With features like image galleries, detailed descriptions, and fullscreen previews, it's a simple yet powerful way to present your work, stay organized, and manage media with ease.</h1>
