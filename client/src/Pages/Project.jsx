@@ -183,7 +183,7 @@ export default function Project() {
 
             {alert && <CustomAlert message={alert.message} type={alert.type} onClose={dismissAlert} />}
 
-            <div className="flex items-center gap-x-3 font-med text-gray-700 md:px-15 px-4">
+            <div className="flex items-center gap-x-3 font-med text-gray-700 md:px-15 px-2">
                 <Link to="/collections" className="hover:underline">Collections</Link>
                 <ChevronRight className="w-4 h-4" />
                 <h1 className="cursor-pointer hover:underline" onClick={() => navigate(-1)}>Projects</h1>
