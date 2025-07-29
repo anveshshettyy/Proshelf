@@ -35,7 +35,7 @@ export default function EditProjectDrawer({
   };
 
   return (
-    <div className="w-full bg-slate-200 rounded-2xl mt-5 md:px-5 px-2 py-6 shadow-xl animate-slideDown">
+    <div className="w-full bg-slate-200 rounded-2xl mt-5 px-5 py-6 shadow-xl animate-slideDown">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-2xl font-head">Edit Project</h2>
         <button

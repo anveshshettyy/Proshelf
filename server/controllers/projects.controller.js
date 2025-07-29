@@ -1,7 +1,7 @@
 const cloudinary = require("../lib/cloudinary");
 const Category = require("../models/category");
 const Projects = require("../models/projects");
-const MAX_VIDEO_SIZE_MB = 25;
+const MAX_VIDEO_SIZE_MB = 60;
 const streamifier = require("streamifier");
 
 exports.createProject = async (req, res) => {
@@ -181,7 +181,7 @@ exports.updateProject = async (req, res) => {
     if (req.files?.video) {
       const videoFile = req.files.video;
       const sizeInMB = videoFile.size / (1024 * 1024);
-      const MAX_VIDEO_SIZE_MB = 95;
+      const MAX_VIDEO_SIZE_MB = 60;
 
       if (sizeInMB > MAX_VIDEO_SIZE_MB) {
         return res.status(400).json({
